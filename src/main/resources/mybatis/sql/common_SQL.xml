@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="sellerweb.common">
+
+    <select id="selectUserInfo" parameterType="string" resultType="UserVO">
+        SELECT
+            BN_MBR_ID
+            ,PWD_NO
+            ,MBR_NM
+            ,PWNO_INIT_YN
+            ,PWERR_CNT
+            ,LGIN_AVL_YN
+            ,MST_MBR_YN
+            ,ACTV_YN
+        FROM TBL002
+        WHERE BN_MBR_ID = #{userId}
+    </select>
+
+    <select id="selectFileInfo" parameterType="string" resultType="DevMap">
+        SELECT
+            FIL_STOR_PTH_TXT
+            ,STOR_FIL_NM
+            ,ORIG_FIL_NM
+            ,FIL_SIZ_NO
+            ,FIL_TYP
+        FROM TBL014 WHERE STOR_FIL_NM = #{storFilNm}
+    </select>
+
+    <insert id="insertFileDetail" parameterType="DevMap">
+        INSERT INTO TBL014 (
+            FIL_STOR_PTH_TXT,
+            STOR_FIL_NM,
+            ORIG_FIL_NM,
+            FIL_EXT_NM,
+            FIL_SIZ_NO,
+            FIL_TYP,
+            INP_MBR_ID
+        ) VALUES (
+            #{filStorPthTxt},
+            #{storFilNm},
+            #{origFilNm},
+            #{filExtNm},
+            #{filSizNo},
+            #{filTyp},
+            #{inpMbrId}
+        )
+    </insert>
+
+    <update id="updateFileDelYn" parameterType="DevMap">
+        UPDATE TBL014
+        SET DEL_YN = 'Y'
+            ,AMD_DT = CURRENT_TIMESTAMP
+        WHERE STOR_FIL_NM = #{storFilNm}
+    </update>
+
+    <select id="selectCntMbrId" parameterType="DevMap" resultType="string">
+        SELECT COUNT(*) FROM TBL002 WHERE BN_MBR_ID = #{mbrId}
+    </select>
+
+    <update id="updatePwerrCntZero" parameterType="string">
+        UPDATE TBL002
+        SET PWERR_CNT = '0'
+            ,AMD_DT = CURRENT_TIMESTAMP
+        WHERE BN_MBR_ID = #{bnMbrId}
+    </update>
+
+    <update id="updatePwerrCntPlus" parameterType="string">
+        UPDATE TBL002
+        SET PWERR_CNT = (
+            SELECT PWERR_CNT + 1 FROM (
+                SELECT * FROM TBL002
+            ) B WHERE B.BN_MBR_ID = #{bnMbrId})
+            ,AMD_DT = CURRENT_TIMESTAMP
+        WHERE BN_MBR_ID = #{bnMbrId}
+    </update>
+
+    <update id="updateLginAvlY" parameterType="string">
+        UPDATE TBL002
+        SET LGIN_AVL_YN = 'Y'
+            ,AMD_DT = CURRENT_TIMESTAMP
+        WHERE BN_MBR_ID = #{bnMbrId}
+    </update>
+
+    <update id="updateLginAvlN" parameterType="string">
+        UPDATE TBL002
+        SET LGIN_AVL_YN = 'N'
+            ,AMD_DT = CURRENT_TIMESTAMP
+        WHERE BN_MBR_ID = #{bnMbrId}
+    </update>
+
+    <update id="updateMstPwInit" parameterType="DevMap">
+        UPDATE TBL002
+            SET PWD_NO = #{tempPwd}
+                ,PWNO_INIT_YN = 'Y'
+                ,PWERR_CNT = '0'
+                ,LGIN_AVL_YN = 'Y'
+                ,AMD_DT = CURRENT_TIMESTAMP
+        WHERE BN_MBR_ID = #{mstMbrId}
+            AND BN_NO = (
+                SELECT BN_NO
+                FROM TBL003
+                WHERE BN_REG_NO = #{bnRegNo}
+                    AND OWNER_NM = #{ownerNm}
+                    AND MST_MBR_ID = #{mstMbrId}
+            )
+            AND MST_MBR_YN = 'Y'
+    </update>
+
+    <insert id="insertNewBnAcc" parameterType="DevMap">
+        INSERT INTO TBL003 (
+            BN_NO
+            ,BN_REG_NO
+            ,BN_NM
+            ,OWNER_NM
+            ,BN_REG_CARD
+            ,BN_ADDR_SIDO
+            ,BN_ADDR_SIGG
+            ,BN_ADDR_DTL
+            ,MST_MBR_ID
+            ,BN_PN_NO
+            ,BN_IMG
+            ,MKT_YN
+        ) VALUES (
+            (SELECT CAST(
+                (SELECT(
+                    IFNULL(
+                        (SELECT MAX(BN_NO) FROM TBL003 B WHERE BN_NO LIKE CONCAT(
+                            (SELECT DATE_FORMAT(CURRENT_TIMESTAMP, '%Y%m%d')), '%'
+                        )), CONCAT(
+                            (SELECT DATE_FORMAT(CURRENT_TIMESTAMP, '%Y%m%d')), '0000'
+                        )
+                    ) + 1
+                ))
+            AS CHAR))
+            ,#{bnRegNo}
+            ,#{bnNm}
+            ,#{ownerNm}
+            ,#{bnRegCard}
+            ,#{bnAddrSido}
+            ,#{bnAddrSigg}
+            ,#{bnAddrDtl}
+            ,#{mstMbrId}
+            ,#{bnPnNo}
+            ,#{bnImg}
+            ,#{mktYn}
+        )
+    </insert>
+
+    <insert id="insertNewMstAcc" parameterType="DevMap">
+        INSERT INTO TBL002 (
+            BN_MBR_ID
+            ,PWD_NO
+            ,PWNO_INIT_YN
+            ,PWERR_CNT
+            ,LGIN_AVL_YN
+            ,BN_NO
+            ,MBR_NM
+            ,MST_MBR_YN
+            ,SELLER_PRMS
+            ,ACTV_YN
+        ) VALUES (
+            #{mstMbrId}
+            ,#{tempPwd}
+            ,'Y'
+            ,'0'
+            ,'Y'
+            ,(SELECT BN_NO FROM TBL003 WHERE MST_MBR_ID = #{mstMbrId})
+            ,#{ownerNm}
+            ,'Y'
+            ,'MASTER'
+            ,'Y'
+        )
+    </insert>
+
+    <insert id="insertNewEmpAcc" parameterType="DevMap">
+        INSERT INTO TBL002 (
+            BN_MBR_ID
+            ,PWD_NO
+            ,PWNO_INIT_YN
+            ,PWERR_CNT
+            ,LGIN_AVL_YN
+            ,BN_NO
+            ,MBR_NM
+            ,MST_MBR_YN
+            ,SELLER_PRMS
+            ,ACTV_YN
+            ,AMD_MBR_ID
+        ) VALUES (
+            #{bnMbrId}
+            ,#{tempPwd}
+            ,'Y'
+            ,'0'
+            ,'Y'
+            ,(SELECT cf_get_bn_no(#{amdMbrId}))
+            ,#{mbrNm}
+            ,'N'
+            ,#{sellerPrms}
+            ,'Y'
+            ,#{amdMbrId}
+        )
+    </insert>
+
+    <update id="updateMbrPw" parameterType="DevMap">
+        UPDATE TBL002
+        SET PWD_NO = #{pwdNo}
+            ,PWNO_INIT_YN = 'N'
+            ,AMD_DT = CURRENT_TIMESTAMP
+            ,AUTH_DT = CURRENT_TIMESTAMP
+        WHERE BN_MBR_ID = #{bnMbrId}
+    </update>
+
+    <select id="selectBnCardChk" parameterType="string" resultType="string">
+        SELECT CARD_CHK_YN FROM TBL003 WHERE BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
+    </select>
+
+</mapper>

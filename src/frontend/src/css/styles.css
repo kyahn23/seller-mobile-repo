@@ -1,0 +1,159 @@
+html {
+  font-size: 0.98vmin !important;
+}
+
+@media screen and (max-width: 360px) {
+  html {
+    font-size: 1.12vmin !important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  html {
+    font-size: 0.6vmin !important;
+  }
+}
+
+body {
+  font-family: "Nanum Gothic", "Roboto", sans-serif !important;
+}
+
+a {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.mdl-layout__header-row {
+  padding: 0 16px 0 16px;
+  background-color: #2d90f5;
+  height: 14rem;
+  border-bottom: 0.1rem solid #ffffff;
+}
+
+.mdl-layout-title {
+  display: inline-block;
+  margin: 0 auto;
+  font-family: "Nanum Gothic", "Roboto", sans-serif !important;
+  font-weight: bold;
+  font-size: 4.8rem;
+}
+
+.pentas-layout__header-login-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pentas-layout__header-login-btn .material-icons {
+  font-size: 6rem;
+}
+
+.pentas-layout__header-login-cpt {
+  font-size: 2.8rem;
+  margin: -2px 0 0 0;
+}
+
+.mdl-layout__tab-bar-container {
+  height: 12rem;
+}
+
+.mdl-layout__tab-bar {
+  background-color: #2d90f5 !important;
+}
+
+.mdl-layout__tab.is-active::after {
+  background: #2d90f5 !important;
+}
+
+.mdl-layout__tab {
+  color: #8cbcf7 !important;
+  font-size: 3.8rem;
+  font-weight: bold;
+  line-height: 12rem;
+  height: 12rem;
+}
+
+.mdl-layout__tab.is-active {
+  color: #ffffff !important;
+}
+
+.pentas__tab-bar-2 {
+  height: 11rem;
+  background-color: #ffffff !important;
+  color: #2d90f5;
+}
+
+.pentas__tab-2 {
+  color: #000000 !important;
+  font-size: 3.2rem;
+  line-height: 11rem;
+  height: 11rem;
+}
+
+.pentas__tab-2.is-active {
+  color: #2d90f5 !important;
+}
+
+.pentas__tab-2.not-active::after {
+  height: 1px;
+  width: 100%;
+  display: block;
+  content: " ";
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  background-color: #000000;
+}
+
+.content-p {
+  padding: 4.2rem 7.4rem;
+  padding-bottom: 14rem;
+}
+
+.mdl-mini-footer {
+  color: rgb(0, 0, 0);
+  background-color: #FDFAFA !important;
+  height: 12.6rem;
+  padding: 14px 4px;
+}
+
+.mdl-mini-footer__left-section {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.pentas-layout__footer-btn-wrapper {
+  width: 25%;
+}
+
+.pentas-layout__footer-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pentas-layout__footer-btn.is-active {
+  color: rgb(33, 150, 243) !important;
+}
+
+.pentas-layout__footer-btn-ico {
+  font-size: 6rem;
+}
+
+.pentas-layout__footer-btn-cpt {
+  font-size: small;
+  margin: 0;
+}
+
+#scroll-top {
+  position: fixed;
+  display: block;
+  right: 0;
+  bottom: 0;
+  margin-right: 4.2rem;
+  margin-bottom: 22rem;
+  z-index: 9000;
+  background-color: #FDFAFA !important;
+}
