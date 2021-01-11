@@ -3,8 +3,10 @@ const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    meta: { titleLabel: "펜타폰" },
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
+      { path: '', component: () => import('pages/Main.vue') },
+      { path: 'main', component: () => import('pages/Main.vue') },
     ]
   },
 
