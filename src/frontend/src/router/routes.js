@@ -1,5 +1,8 @@
 const routes = [
   {
+    path: '/login',component: () => import('pages/Login.vue')
+  },
+  {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     meta: { titleLabel: "펜타폰" },
@@ -16,7 +19,16 @@ const routes = [
         path: "product/:carrier",
         component: () => import("pages/ProductView.vue"),
         props: true
-      }
+      },
+      { path: 'status', component: () => import('pages/Status.vue') },
+      {
+        path: "status/detail/:dealno",
+        component: () => import("pages/Status_Detail.vue"),
+        meta: {
+          titleLabel: "상담상세정보"
+        },
+        props: true
+      },
     ]
   },
 

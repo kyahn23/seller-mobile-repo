@@ -29,10 +29,9 @@
       </q-toolbar>
       <q-tabs indicator-color="white" dense align="left">
         <q-route-tab to="/main" label="홈" />
-        <q-route-tab to="/price" label="공지사항" />
-        <q-route-tab to="/register" label="상담현황" />
-        <q-route-tab to="/status" label="상품현황" />
-        <q-route-tab to="/customer" label="고객센터" />
+        <q-route-tab to="/board" label="공지사항" />
+        <q-route-tab to="/status" label="상담현황" />
+        <q-route-tab to="/product" label="상품현황" />
       </q-tabs>
     </q-header>
 
