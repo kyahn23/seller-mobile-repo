@@ -11,6 +11,11 @@ const routes = [
         path: "board/:brdNo",
         component: () => import("pages/BoardDetail.vue"),
         props: true
+      },
+      {
+        path: "product/:carrier",
+        component: () => import("pages/ProductView.vue"),
+        props: true
       }
     ]
   },
