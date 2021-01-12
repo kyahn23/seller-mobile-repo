@@ -93,8 +93,7 @@
         style="font-weight: bold;"
       >
         <q-card
-          style="background-color: #E9F0F8;
-            border-top: 1px solid rgba(0, 0, 0, 0.12);
+          style="border-top: 1px solid rgba(0, 0, 0, 0.12);
             font-weight: normal;"
         >
           <q-card-section>
