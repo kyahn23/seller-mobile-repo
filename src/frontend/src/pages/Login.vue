@@ -7,7 +7,14 @@
       contain
     />
     <p class="text-subtitle1 text-weight-medium">판매업체 전용 App</p>
-    <q-form class="flex column fit" ref="loginForm" name="loginForm" :action="rootCtx + '/loginProc'" method="post">
+    <q-form
+      class="flex column fit"
+      ref="loginForm"
+      name="loginForm"
+      :action="rootCtx + '/loginProc'"
+      method="post"
+      @submit="onSubmit"
+    >
       <q-input
         v-model="userId"
         label="아이디 (이메일)"
@@ -23,12 +30,12 @@
         ]"
       />
       <q-input
-        v-model="userPw"
+        v-model="inputPw"
         label="비밀번호"
         rounded
         outlined
-        name="userPw"
-        id="userPw"
+        name="inputPw"
+        id="inputPw"
         stack-label
         :type="isPwd ? 'password' : 'text'"
         class="q-px-lg q-py-sm fit"
@@ -42,20 +49,19 @@
           />
         </template>
       </q-input>
+      <input name="userPw" id="userPw" type="hidden" :value="userPw" />
       <div class="flex column q-px-lg q-pt-lg q-gutter-y-md fit">
         <q-btn
           unelevated
           rounded
           color="primary"
           label="로그인"
-          type="button"
-          @click="onClick"
+          type="submit"
         />
       </div>
     </q-form>
     <q-footer class="text-center justify-center row bg-white">
-      <q-tabs class="text-grey-7"
-              align="center">
+      <q-tabs class="text-grey-7" align="center">
         ©2021 PENTAS. All rights reserved.
       </q-tabs>
     </q-footer>
@@ -66,21 +72,26 @@
 import sha256 from "crypto-js/sha256";
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
       isPwd: true,
       userId: "",
-      userPw: "",
+      inputPw: "",
       rootCtx: process.env.API
+    };
+  },
+  methods: {
+    onSubmit(evt) {
+      if (!this.$cf.isEmpty(this.userId) && !this.$cf.isEmpty(this.inputPw)) {
+        evt.target.submit();
+      }
     }
   },
-  methods:{
-    onClick() {
-      if (!this.$cf.isEmpty(this.userId) && !this.$cf.isEmpty(this.userPw)) {
-        document.loginForm.submit()
-      }
-    },
+  computed: {
+    userPw: function() {
+      return sha256(this.inputPw).toString();
+    }
   }
-}
+};
 </script>
