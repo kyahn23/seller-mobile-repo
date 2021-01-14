@@ -4,11 +4,11 @@
       background-color="white"
       indicator-color="primary"
       dense
-      align="left"
+      align="justify"
     >
-      <q-route-tab to="/product/SKT" label="SKT" />
-      <q-route-tab to="/product/KT" label="KT" />
-      <q-route-tab to="/product/LGU" label="LGU" />
+      <q-route-tab to="/product/SKT" label="SKT"/>
+      <q-route-tab to="/product/KT" label="KT"/>
+      <q-route-tab to="/product/LGU" label="LGU"/>
     </q-tabs>
     <div id="top" class="q-pt-md">
       <div class="q-px-md q-mb-xs">
@@ -16,7 +16,7 @@
           {{ carrier }} 상품현황
         </span>
       </div>
-      <q-separator />
+      <q-separator/>
       <div class="q-py-sm q-pt-md q-px-md row items-center justify-between">
         <div class="col-2">
           제조사
@@ -56,34 +56,31 @@
           검색
         </q-btn>
       </div>
-      <q-separator />
-      <div class="q-py-sm q-px-md row items-center justify-between">
+      <q-separator/>
+      <div class="row">
         <q-btn
+          class="col-4 no-border-radius"
           unelevated
           :color="setThisColor('a')"
           :text-color="setThisText('a')"
           @click="setThisList('a')"
-        >
-          번호이동
-        </q-btn>
+          label="번호이동"/>
         <q-btn
+          class="col-4 no-border-radius"
           unelevated
           :color="setThisColor('b')"
           :text-color="setThisText('b')"
           @click="setThisList('b')"
-        >
-          기기변경
-        </q-btn>
+          label="기기변경"/>
         <q-btn
+          class="col-4 no-border-radius"
           unelevated
           :color="setThisColor('c')"
           :text-color="setThisText('c')"
           @click="setThisList('c')"
-        >
-          신규가입
-        </q-btn>
+          label="신규가입"/>
       </div>
-      <q-separator />
+      <q-separator/>
     </div>
     <div v-for="(thisOne, index) in thisList" :key="index">
       <q-expansion-item
@@ -101,13 +98,13 @@
           </q-card-section>
         </q-card>
       </q-expansion-item>
-      <q-separator />
+      <q-separator/>
     </div>
     <q-list>
       <q-item clickable class="q-pt-none q-pb-sm" @click="scrollTop">
         <q-item-section>
           <q-item-label class="self-center">
-            <q-icon name="expand_less" size="md" />
+            <q-icon name="expand_less" size="md"/>
           </q-item-label>
           <q-item-label class="self-center text-caption">
             맨 위로 돌아가기
@@ -119,9 +116,9 @@
 </template>
 
 <script>
-import { scroll } from "quasar";
+import {scroll} from "quasar";
 
-const { getScrollTarget, setScrollPosition } = scroll;
+const {getScrollTarget, setScrollPosition} = scroll;
 
 export default {
   name: "PageProductView",
@@ -135,17 +132,17 @@ export default {
     return {
       selectMaker: "SAM",
       makerList: [
-        { label: "삼성", value: "SAM" },
-        { label: "애플", value: "APL" },
-        { label: "LG", value: "LG" },
-        { label: "기타", value: "ETC" }
+        {label: "삼성", value: "SAM"},
+        {label: "애플", value: "APL"},
+        {label: "LG", value: "LG"},
+        {label: "기타", value: "ETC"}
       ],
       selectModel: "phone01",
       modelList: [
-        { label: "폰01", value: "phone01" },
-        { label: "폰02", value: "phone02" },
-        { label: "폰03", value: "phone03" },
-        { label: "폰04", value: "phone04" }
+        {label: "폰01", value: "phone01"},
+        {label: "폰02", value: "phone02"},
+        {label: "폰03", value: "phone03"},
+        {label: "폰04", value: "phone04"}
       ],
       thisSelected: null,
       thisList: [],
@@ -203,7 +200,7 @@ export default {
     };
   },
   watch: {
-    thisSelected: function(newValue, oldValue) {
+    thisSelected: function (newValue, oldValue) {
       if (newValue === "a") {
         this.thisList = this.aList;
       } else if (newValue === "b") {

@@ -3,43 +3,32 @@ package com.pentas.sellermobile.common.conf;
 import com.pentas.sellermobile.common.springsecurity.AuthFailureHandler;
 import com.pentas.sellermobile.common.springsecurity.AuthSuccessHandler;
 import com.pentas.sellermobile.common.springsecurity.CustomAuthenticationProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 
-@Configuration
+@RequiredArgsConstructor
+@EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-    
+
 	@Autowired
 	CustomAuthenticationProvider authenticationProvider;
-    
+
     @Autowired
 	AuthFailureHandler authFailureHandler;
-    
+
     @Autowired
 	AuthSuccessHandler authSuccessHandler;
 
     @Override
 	public void configure(WebSecurity web) throws Exception {
 		// 허용되어야 할 경로들
-		web.ignoring().antMatchers("/resources/**", 
-								"/dist/**", 
-								"/test/**",
-								"/weather", 
-								"/user/password/find", 
-								"/user/join",
-								"/user/email", 
-								"/user/send/temppw", 
-								"/findpw", 
-								"/user/findpw", 
-								"/user/cert/check", 
-								"/join",
-								"/getLanguage/**", 
-								"/getMessage");
+		web.ignoring().antMatchers("/resources/**");
 	}
 
 	@Override
@@ -51,7 +40,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.sameOrigin()
 				.and()
             .formLogin() // 로그인 페이지 및 성공 url, handler 그리고 로그인시 사용되는 id, password 파라미터 정의
-	            .loginPage("/login") // 밑의 authorizeRequests 에 설정한 규칙에 어긋난경우 로그인페이지 호출 URL
+	            .loginPage("/#/login") // 밑의 authorizeRequests 에 설정한 규칙에 어긋난경우 로그인페이지 호출 URL
 	            .loginProcessingUrl("/loginProc") // 로그인처리시 호출할 URL
 	            .defaultSuccessUrl("/afterLoginProc", true) // 로그인 성공후 이동할 URL
 	            .failureUrl("/loginFail")  // 로그인 실패후 이동할 URL
@@ -59,21 +48,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	            .passwordParameter("userPw") // 로그인페이지에서 로그인 password 파라메타 명
 	            .and()
             .logout()
-            	.logoutSuccessUrl("/") // 로그아웃후 이동할 URL
+            	.logoutSuccessUrl("/login") // 로그아웃후 이동할 URL
             	.invalidateHttpSession(true)
             	.and()
             .authorizeRequests()
-				.antMatchers("/images/**", "/js/**", "/css/**").permitAll()
-				.antMatchers("/login").permitAll()
-				.antMatchers("/loginFail").permitAll()
-				.antMatchers("/join", "/join/**").permitAll()
-				.antMatchers("/member/**").permitAll()
-				.antMatchers("/upload/image", "/imageSrc").permitAll()
-				.antMatchers("/", "/**").authenticated()
+				.antMatchers("/", "/**").permitAll()
             	.and()
+			.cors()
+				.and()
             .authenticationProvider(authenticationProvider);
 	}
-	
+
 	@Override
 	protected void  configure(AuthenticationManagerBuilder auth) {
 		auth.eraseCredentials(false);

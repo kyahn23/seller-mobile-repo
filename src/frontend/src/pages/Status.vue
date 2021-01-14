@@ -1,10 +1,11 @@
 <template>
-  <div class="q-pt-sm">
+  <div class="q-pt-md">
     <div class="row">
-      <div class="q-px-md text-subtitle1 text-weight-medium">
+      <div class="q-px-md text-subtitle1 text-weight-medium q-mb-xs">
         상담현황
       </div>
     </div>
+    <q-separator />
     <div class="row items-center justify-between q-px-md q-py-sm">
       <q-select class="col-4 bg-white"
                 outlined

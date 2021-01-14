@@ -178,5 +178,3 @@ export default {
 
 };
 </script>
-{{ dealOne.mntCarr }} / {{ dealOne.pnRegDis }} /
-{{ dealOne.pnMntRtNm }}

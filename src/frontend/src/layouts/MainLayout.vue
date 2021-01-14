@@ -27,7 +27,7 @@
           @click="loginToggle"
         />
       </q-toolbar>
-      <q-tabs indicator-color="white" dense align="left">
+      <q-tabs indicator-color="white" dense align="justify">
         <q-route-tab to="/main" label="홈" />
         <q-route-tab to="/board" label="공지사항" />
         <q-route-tab to="/status" label="상담현황" />
@@ -50,9 +50,9 @@
           active-color="primary"
         >
           <q-route-tab to="/main" icon="home" label="홈" />
-          <q-route-tab to="/price" icon="list" label="공지사항" />
-          <q-route-tab to="/register" icon="contacts" label="상담현황" />
-          <q-route-tab to="/mypage" icon="smartphone" label="상품현황" />
+          <q-route-tab to="/board" icon="list" label="공지사항" />
+          <q-route-tab to="/status" icon="contacts" label="상담현황" />
+          <q-route-tab to="/product" icon="smartphone" label="상품현황" />
         </q-tabs>
       </div>
     </q-footer>
