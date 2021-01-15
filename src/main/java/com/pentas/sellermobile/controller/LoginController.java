@@ -76,12 +76,21 @@ public class LoginController {
             }
 
             String bnCardChkYn = commonService.checkBnCardChk(bnMbrId);
+            if (bnCardChkYn.equals("N")) {
+                redirectLogin = StringUtils.join(redirectLogin, "?loginStat=BNCARD");
+                return redirectLogin;
+            }
+            if (userVO.getPwnoInitYn().equals("Y")) {
+                redirectLogin = StringUtils.join(redirectLogin, "?loginStat=PWINIT");
+                return redirectLogin;
+            }
+
 
             session.setAttribute("bnMbrId", userVO.getBnMbrId());
             session.setAttribute("mbrNm", userVO.getMbrNm());
-            session.setAttribute("pwnoInitYn", userVO.getPwnoInitYn());
+//            session.setAttribute("pwnoInitYn", userVO.getPwnoInitYn());
             session.setAttribute("mstMbrYn", userVO.getMstMbrYn());
-            session.setAttribute("bnCardChkYn", bnCardChkYn);
+//            session.setAttribute("bnCardChkYn", bnCardChkYn);
             redirect.addFlashAttribute("loginStat", "SUCC");
             redirectMain = StringUtils.join(redirectMain, "?bnMbrId=", userVO.getBnMbrId());
 

@@ -65,6 +65,22 @@
         ©2021 PENTAS. All rights reserved.
       </q-tabs>
     </q-footer>
+
+    <q-dialog v-model="alertYn" persistent full-width>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">{{alertTitle}}</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none" v-html="alertContent">
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="확인" color="primary" v-close-popup></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </q-layout>
 </template>
 
@@ -76,6 +92,9 @@ export default {
   data() {
     return {
       isPwd: true,
+      alertYn: false,
+      alertTitle: "",
+      alertContent: "",
       userId: "",
       inputPw: "",
       rootCtx: process.env.API
@@ -102,6 +121,14 @@ export default {
             textColor: "white",
             message: "로그아웃 되었습니다."
           })
+        } else if (loginStat === 'BNCARD') {
+          this.alertYn = true
+          this.alertTitle = '사업자 등록증 미확인'
+          this.alertContent = '<span>현재 사업자 등록증 확인 중입니다.</span><br><span>확인 완료 후 로그인 하실 수 있습니다.<br><p>(평일(공휴일 제외) 24시간이내 완료)</p></span>'
+        } else if (loginStat === 'PWINIT') {
+          this.alertYn = true
+          this.alertTitle = '비밀번호 초기화'
+          this.alertContent = '<span>새로운 비밀번호 설정은</span><br><span>PC를 통해서만 가능합니다.</span>'
         } else if (loginStat.indexOf("FAIL_PWERR_CNT_") !== -1) {
           let pwerrCntStr = loginStat.slice(15)
           if (pwerrCntStr === 'OVER') {
@@ -119,8 +146,6 @@ export default {
           }
         }
       }
-
-
     },
     onSubmit(evt) {
       if (!this.$cf.isEmpty(this.userId) && !this.$cf.isEmpty(this.inputPw)) {

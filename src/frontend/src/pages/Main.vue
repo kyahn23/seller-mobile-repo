@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <div class="row">
       <div class="q-mt-xs text-subtitle1 text-weight-medium">
-        <span class="text-blue-6">{{ mbrNm }}</span>님 환영합니다!
+        <span class="text-blue-6 q-mr-sm">{{ bnNm }}</span><span class="text-blue-6">{{ mbrNm }}</span>님 환영합니다!
       </div>
     </div>
     <p class="text-subtitle2 text-weight-medium q-my-xs">내 매장 상품 바로조회</p>
@@ -155,6 +155,7 @@
     <!--        </q-item-section>-->
     <!--      </q-item>-->
     <!--    </q-list>-->
+
   </div>
 </template>
 
@@ -164,6 +165,8 @@ export default {
   data() {
     return {
       bnMbrId: '',
+      alertYn: false,
+      pwoInitYn: '',
       kwd: "",
       selectOpt: "clientNm",
       optList: [
@@ -172,21 +175,26 @@ export default {
       ],
       dealList: [
         {mntCarr: "SKT", pnRegDis: "번호이동", pnMntRtNm: "요금제이름"}
-
       ]
     }
   },
   mounted() {
-    let currentPath = window.location.href
-    let mbrId = currentPath.substring(currentPath.lastIndexOf('=')+1)
-    this.bnMbrId = mbrId.replace('%40', '@')
+    let AuthChk = this.$store.getters.isAuth
 
-    this.getInfo()
+    console.log(AuthChk)
+    if (AuthChk === false) {
+      let currentPath = window.location.href
+      let mbrId = currentPath.substring(currentPath.lastIndexOf('=') + 1)
+      mbrId = mbrId.replace('%40', '@')
+      this.$store.commit("setCurrentUser", {currentUser: mbrId});
+      this.getInfo()
+    }
+
   },
   methods: {
-    getInfo(){
+    getInfo() {
       let param = {
-        bnMbrId : this.bnMbrId
+        bnMbrId: this.$store.getters.currentUser
       }
       this.$cf.call(
         process.env.API + "/getinfo",
@@ -195,10 +203,42 @@ export default {
         false
       )
     },
-    getInfoCB(response){
+    getInfoCB(response) {
       console.log(response)
+
+
+      if (response.bnCardChkYn === 'N') {
+        this.bnCardChkYn = true
+        // alert("사업자등록증 확인중")
+      } else if (response.pwoInitYn === 'Y') {
+        alert("새로운 비밀번호 설정은 PC에서 진행해 주세요")
+      } else {
+        this.$store.commit("setAuth", {isAuth: true});
+        this.$store.commit("setMbrName", {mbrName: response.mbrNm});
+        this.$store.commit("setBnName", {bnName: response.bnName});
+      }
+
+      // this.mainInit()
+    },
+    mainInit() {
+
+    },
+    // goToLogin(){
+    //   this.$store.commit("setCurrentUser", {currentUser: ""})
+    //   window.location.href = process.env.API + "/logout"
+    // }
+  },
+  computed: {
+    mbrNm: {
+      get() {
+        return this.$store.getters.mbrName;
+      }
+    },
+    bnNm: {
+      get() {
+        return this.$store.getters.bnName;
+      }
     }
   }
-
 };
 </script>

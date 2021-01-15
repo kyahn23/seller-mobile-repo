@@ -98,11 +98,19 @@ public class CommonRestController {
         // 사업자등록증 확인여부
         String bnCardChkYn = commonService.checkBnCardChk(bnMbrId);
 
+        // 업체정보
+        DevMap temp = cmmnDao.selectOne("sellermobile.shop.getShopInfo", param);
+        String bnName = temp.getString("bnNm");
+
         UserVO user = new UserVO();
-//        user = commonService.getUserInfo(param);
         user = cmmnDao.selectOne("sellermobile.common.selectUserInfo", bnMbrId);
+
+        result.put("mbrNm", user.getMbrNm());
+        result.put("pwnoInitYn", user.getPwnoInitYn());
+        result.put("mstMbrYn", user.getMstMbrYn());
         result.put("bnCardChkYn", bnCardChkYn);
-        result.put("user", user);
+        result.put("bnName", bnName);
+//        result.put("user", user);
         return result;
     }
 

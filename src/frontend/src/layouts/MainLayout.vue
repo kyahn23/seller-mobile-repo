@@ -35,7 +35,6 @@
       </q-tabs>
     </q-header>
 
-
     <q-page-container>
       <router-view/>
     </q-page-container>
@@ -56,6 +55,41 @@
         </q-tabs>
       </div>
     </q-footer>
+
+    <q-dialog v-model="quitDialog" persistent>
+      <q-card style="width: 300px">
+        <q-card-section>
+          <div class="text-subtitle1 text-weight-bold">PentaPhone 종료</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          PentaPhone을 종료하시겠습니까?
+        </q-card-section>
+
+        <q-card-actions align="evenly">
+          <q-btn
+            unelevated
+            rounded
+            color="primary"
+            label="취소"
+            style="width: 48%"
+            @click="closeQuitDialog"
+          />
+          <q-btn
+            unelevated
+            rounded
+            color="primary"
+            label="종료"
+            style="width: 48%"
+            @click="quitConfirm"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-inner-loading :showing="isLoading" class="z-max">
+      <q-spinner color="primary" size="3em" />
+    </q-inner-loading>
   </q-layout>
 </template>
 
@@ -92,17 +126,12 @@ export default {
     },
     /** 로그아웃 */
     logOut() {
-      // this.$store.commit("setAuth", {isAuth: false});
-      // this.$store.commit("setCurrentUser", {currentUser: ""});
-      // this.$store.commit("setNotification", {
-      //   color: "primary",
-      //   textColor: "white",
-      //   message: "로그아웃 되었습니다.",
-      //   caption: ""
-      // });
-      window.location.href = process.env.API +"/logout"
-      // this.$router.push({path: "/logout"});
-
+      this.$store.commit("setAuth", {isAuth: false});
+      this.$store.commit("setCurrentUser", {currentUser: ""});
+      this.$store.commit("setAuth", {isAuth: true});
+      this.$store.commit("setMbrName", {mbrName: ""});
+      this.$store.commit("setBnName", {bnName: ""});
+      window.location.href = process.env.API + "/logout"
     },
     /** 앱 종료 취소 함수 */
     closeQuitDialog() {
@@ -114,11 +143,53 @@ export default {
     }
   },
   computed: {
+    isLoading: {
+      get() {
+        return this.$store.getters.isLoading;
+      }
+    },
+    isLayer: {
+      get() {
+        return this.$store.getters.isLayer;
+      }
+    },
     notification: {
       get() {
         return this.$store.getters.notification;
       }
     },
+    isLogin: {
+      get() {
+        return this.$store.getters.isAuth;
+      }
+    },
+    leftBtnIcon: {
+      get() {
+        if (
+          this.isMain ||
+          (this.isLayer && this.dialogFrom.includes("/main"))
+        ) {
+          return "check_box_outline_blank";
+        }
+        return "arrow_back_ios";
+      }
+    },
+    leftBtnColor: {
+      get() {
+        if (
+          this.isMain ||
+          (this.isLayer && this.dialogFrom.includes("/main"))
+        ) {
+          return "primary";
+        }
+        return "white";
+      }
+    },
+    quitDialog: {
+      get() {
+        return this.$store.getters.quitDialog;
+      }
+    }
   }
 };
 </script>

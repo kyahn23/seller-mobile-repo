@@ -18,12 +18,8 @@ export default function() {
       },
       isAuth: false,
       currentUser: "",
-      newSocialUser: {
-        service: "",
-        id: "",
-        email: "",
-        name: ""
-      }
+      mbrName: "",
+      bnName:""
     },
     getters: {
       isLoading: state => state.isLoading,
@@ -32,7 +28,8 @@ export default function() {
       notification: state => state.notification,
       isAuth: state => state.isAuth,
       currentUser: state => state.currentUser,
-      newSocialUser: state => state.newSocialUser
+      mbrName: state => state.mbrName,
+      bnName: state => state.bnName
     },
     mutations: {
       setLoading(state, payload) {
@@ -59,11 +56,11 @@ export default function() {
       setCurrentUser(state, payload) {
         state.currentUser = payload.currentUser;
       },
-      setNewSocialUser(state, payload) {
-        state.newSocialUser.service = payload.service;
-        state.newSocialUser.id = payload.id;
-        state.newSocialUser.email = payload.email;
-        state.newSocialUser.name = payload.name;
+      setMbrName(state, payload){
+        state.mbrName = payload.mbrName
+      },
+      setBnName(state, payload){
+        state.bnName = payload.bnName
       }
     }
   });
