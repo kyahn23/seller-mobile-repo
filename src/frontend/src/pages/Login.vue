@@ -49,7 +49,7 @@
           />
         </template>
       </q-input>
-      <input name="userPw" id="userPw" type="hidden" :value="userPw" />
+      <input name="userPw" id="userPw" type="hidden" :value="userPw"/>
       <div class="flex column q-px-lg q-pt-lg q-gutter-y-md fit">
         <q-btn
           unelevated
@@ -81,7 +81,47 @@ export default {
       rootCtx: process.env.API
     };
   },
+  mounted() {
+    this.urlchk()
+  },
   methods: {
+    urlchk() {
+      let currentPath = window.location.href
+      let loginStat = ''
+      if (currentPath.indexOf('loginStat') !== -1) {
+        loginStat = currentPath.substring(currentPath.lastIndexOf('=') + 1)
+        if (loginStat === 'FAIL') {
+          this.$q.notify({
+            color: "grey-8",
+            textColor: "white",
+            message: "로그인 실패 했습니다. ID 또는 비밀번호를 확인해주세요."
+          })
+        } else if (loginStat === 'LOGOUT') {
+          this.$q.notify({
+            color: "grey-8",
+            textColor: "white",
+            message: "로그아웃 되었습니다."
+          })
+        } else if (loginStat.indexOf("FAIL_PWERR_CNT_") !== -1) {
+          let pwerrCntStr = loginStat.slice(15)
+          if (pwerrCntStr === 'OVER') {
+            this.$q.notify({
+              color: "grey-8",
+              textColor: "white",
+              message: "로그인을 5회 이상 실패했습니다. PC화면에서 비밀번호를 재설정 해주세요."
+            })
+          } else {
+            this.$q.notify({
+              color: "grey-8",
+              textColor: "white",
+              message: "로그인을 " + pwerrCntStr + "회 실패했습니다. 5회 이상 실패 시 로그인이 제한됩니다."
+            })
+          }
+        }
+      }
+
+
+    },
     onSubmit(evt) {
       if (!this.$cf.isEmpty(this.userId) && !this.$cf.isEmpty(this.inputPw)) {
         evt.target.submit();
@@ -89,7 +129,7 @@ export default {
     }
   },
   computed: {
-    userPw: function() {
+    userPw: function () {
       return sha256(this.inputPw).toString();
     }
   }

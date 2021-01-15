@@ -48,7 +48,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	            .passwordParameter("userPw") // 로그인페이지에서 로그인 password 파라메타 명
 	            .and()
             .logout()
-            	.logoutSuccessUrl("/login") // 로그아웃후 이동할 URL
+            	.logoutSuccessUrl("/#/login?loginStat=LOGOUT") // 로그아웃후 이동할 URL
             	.invalidateHttpSession(true)
             	.and()
             .authorizeRequests()

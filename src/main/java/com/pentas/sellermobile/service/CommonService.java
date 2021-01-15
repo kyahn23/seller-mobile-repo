@@ -39,7 +39,7 @@ public class CommonService {
      * @return
      */
     public String checkMemberId(DevMap param) {
-        return cmmnDao.selectOne("sellerweb.common.selectCntMbrId", param);
+        return cmmnDao.selectOne("sellermobile.common.selectCntMbrId", param);
     }
 
 
@@ -47,32 +47,32 @@ public class CommonService {
      * 비밀번호 오류 횟수 초기화
      * @param bnMbrId
      */
-    public void updatePwerrCntZero(String bnMbrId) { cmmnDao.update("sellerweb.common.updatePwerrCntZero", bnMbrId); }
+    public void updatePwerrCntZero(String bnMbrId) { cmmnDao.update("sellermobile.common.updatePwerrCntZero", bnMbrId); }
 
     /**
      * 비밀번호 오류 횟수 추가
      * @param bnMbrId
      */
-    public void updatePwerrCntPlus(String bnMbrId) { cmmnDao.update("sellerweb.common.updatePwerrCntPlus", bnMbrId); }
+    public void updatePwerrCntPlus(String bnMbrId) { cmmnDao.update("sellermobile.common.updatePwerrCntPlus", bnMbrId); }
 
     /**
      * 로그인 가능여부 가능으로 변경
      * @param bnMbrId
      */
-    public void updateLginAvlY(String bnMbrId) { cmmnDao.update("sellerweb.common.updateLginAvlY", bnMbrId); }
+    public void updateLginAvlY(String bnMbrId) { cmmnDao.update("sellermobile.common.updateLginAvlY", bnMbrId); }
 
     /**
      * 로그인 가능여부 불가로 변경
      * @param bnMbrId
      */
-    public void updateLginAvlN(String bnMbrId) { cmmnDao.update("sellerweb.common.updateLginAvlN", bnMbrId); }
+    public void updateLginAvlN(String bnMbrId) { cmmnDao.update("sellermobile.common.updateLginAvlN", bnMbrId); }
 
     /**
      * 초기화 비밀번호 변경
      * @param param
      */
     public void updateMbrPw(DevMap param) {
-        cmmnDao.update("sellerweb.common.updateMbrPw", param);
+        cmmnDao.update("sellermobile.common.updateMbrPw", param);
     }
 
     /**
@@ -81,7 +81,7 @@ public class CommonService {
      * @return
      */
     public DevMap getFileInfo(String param) {
-        return cmmnDao.selectOne("sellerweb.common.selectFileInfo", param);
+        return cmmnDao.selectOne("sellermobile.common.selectFileInfo", param);
     }
 
     /**
@@ -90,7 +90,7 @@ public class CommonService {
      * @throws UserException
      */
     public void updateFileDelYn(DevMap param) throws UserException {
-        cmmnDao.update("sellerweb.common.updateFileDelYn", param);
+        cmmnDao.update("sellermobile.common.updateFileDelYn", param);
     }
 
     /**
@@ -233,6 +233,6 @@ public class CommonService {
      * @param param
      * @return
      */
-    public String checkBnCardChk(String param) { return cmmnDao.selectOne("sellerweb.common.selectBnCardChk", param); }
+    public String checkBnCardChk(String param) { return cmmnDao.selectOne("sellermobile.common.selectBnCardChk", param); }
 
 }

@@ -28,7 +28,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // 사용자 정보 가져오기
 		UserVO userVO = new UserVO();
 		try {
-        	userVO = cmmnDao.selectOne("sellerweb.common.selectUserInfo", userId);
+        	userVO = cmmnDao.selectOne("sellermobile.common.selectUserInfo", userId);
         } catch(RuntimeException ex) {
         	log.error(CmmnUtil.getExceptionMsg(ex));
         	throw new BadCredentialsException("로그 확인이 필요합니다.");
