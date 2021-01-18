@@ -88,7 +88,7 @@
     </q-dialog>
 
     <q-inner-loading :showing="isLoading" class="z-max">
-      <q-spinner color="primary" size="3em" />
+      <q-spinner color="primary" size="3em"/>
     </q-inner-loading>
   </q-layout>
 </template>
@@ -100,18 +100,38 @@ export default {
     return {
       isMain: true,
       isBackBtn: false,
-      isLayerBackBtn: false,
-      isFromLayerBackBtn: false,
       titleLabel: "펜타폰",
       logOutLabel: "로그아웃",
       dialogFrom: "/main",
       pageFrom: [],
-      layerFrom: []
     };
   },
   mounted() {
   },
   watch: {
+    $route(to, from) {
+      const matchedRoutes = this.$router.currentRoute.matched;
+      let routeIndex = matchedRoutes.length;
+      let labelExists = false;
+      while (!labelExists) {
+        routeIndex -= 1;
+        if (matchedRoutes[routeIndex].meta.titleLabel !== undefined) {
+          this.titleLabel = matchedRoutes[routeIndex].meta.titleLabel;
+          labelExists = true;
+        }
+      }
+      if (!this.isBackBtn) {
+        this.pageFrom.push(from.path);
+      }
+
+      if (to.path.includes("/main")) {
+        this.isMain = true;
+      } else {
+        this.isMain = false;
+      }
+      this.isBackBtn = false
+    },
+
     notification(newNotification) {
       this.$q.notify(newNotification);
     },
@@ -148,11 +168,6 @@ export default {
         return this.$store.getters.isLoading;
       }
     },
-    isLayer: {
-      get() {
-        return this.$store.getters.isLayer;
-      }
-    },
     notification: {
       get() {
         return this.$store.getters.notification;
@@ -165,10 +180,7 @@ export default {
     },
     leftBtnIcon: {
       get() {
-        if (
-          this.isMain ||
-          (this.isLayer && this.dialogFrom.includes("/main"))
-        ) {
+        if (this.isMain) {
           return "check_box_outline_blank";
         }
         return "arrow_back_ios";
@@ -176,10 +188,7 @@ export default {
     },
     leftBtnColor: {
       get() {
-        if (
-          this.isMain ||
-          (this.isLayer && this.dialogFrom.includes("/main"))
-        ) {
+        if (this.isMain) {
           return "primary";
         }
         return "white";

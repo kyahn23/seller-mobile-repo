@@ -12,6 +12,7 @@
           dense
           v-model="selectOpt"
           :options="optList"
+          emit-value
           map-options
         >
         </q-select>
@@ -19,7 +20,7 @@
           <q-input v-model="searchKwd" dense outlined class="q-px-sm" />
         </div>
         <div class="col-2">
-          <q-btn unelevated padding="sm" color="primary" class="full-width">
+          <q-btn unelevated padding="sm" color="primary" class="full-width" @click="initPage">
             검색
           </q-btn>
         </div>
@@ -35,9 +36,9 @@
     <q-list>
       <q-separator />
       <div
-        v-for="(board, index) in boardList"
+        v-for="(board, index) in bnBrdList"
         :key="index"
-        @click="boardClick(board.brdId)"
+        @click="boardClick(board.brdNo)"
       >
         <q-item>
           <q-item-section class="q-py-xs">
@@ -52,7 +53,7 @@
               {{ board.brdTitle }}
             </q-item-label>
             <q-item-label caption>
-              {{ board.inpDt }} | {{ board.brdWriter }}
+              {{ board.brdRegDt }} | {{ board.brdWriterNm }}
             </q-item-label>
           </q-item-section>
           <q-item-section side>
@@ -64,7 +65,18 @@
         <q-separator />
       </div>
 
-      <q-item class="q-py-md" v-if="this.pageInit && this.pageInfo.hasNextPage">
+      <q-item class="q-py-lg" v-if="this.pageInit && this.bnBrdList.length < 1">
+        <q-item-section class="text-grey-5">
+          <q-item-label class="self-center">
+            <q-icon name="error" size="xl" />
+          </q-item-label>
+          <q-item-label class="q-pt-sm self-center text-subtitle1">
+            해당하는 내용이 없습니다.
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item class="q-py-md" v-if="this.pageInfo.hasNextPage">
         <q-btn
           flat
           class="full-width text-weight-bold"
@@ -116,12 +128,12 @@ export default {
       /** 페이징 처리 정보 */
       pageInfo: {},
       /** 공지사항리스트 */
-      boardList: []
+      bnBrdList: []
     };
   },
   mounted() {
     // this.$store.commit("setLoading", {isLoading: true});
-    this.getBoard(this.page);
+    this.initPage()
   },
   methods: {
     /** 맨 위로 돌아가기 이벤트 */
@@ -134,62 +146,34 @@ export default {
     },
     /** 더 보기 버튼 클릭 이벤트 */
     onBoardMore() {
-      // this.getBoard(this.pageInfo.nextPage + "");
+      this.getBoard(this.pageInfo.nextPage + "");
+    },
+    initPage(){
+      if (this.page !== "1") this.page = "1"
+      this.bnBrdList = []
+      this.getBoard(this.page);
     },
     /** list 호출 함수 */
     getBoard(page) {
-      // this.$cf.call(
-      //   process.env.API + "/api/customer/boardList",
-      //   {
-      //     page: page
-      //   },
-      //   this.getBoardCB,
-      //   false
-      // );
+      this.$cf.call(
+        process.env.API + "/shop/getBnBrdList",
+        {
+          bnMbrId : this.$store.getters.currentUser,
+          selectOpt: this.selectOpt,
+          searchKwd: this.searchKwd,
+          page: page
+        },
+        this.getBoardCB,
+        false
+      );
       this.pageInit = true;
-      this.boardList = [
-        {
-          brdId: "1",
-          brdImpYn: "Y",
-          brdTitle: "중요한 공지 제목",
-          inpDt: "2021-01-12",
-          brdWriter: "홍길동"
-        },
-        {
-          brdId: "2",
-          brdImpYn: "N",
-          brdTitle: "안 중요한 공지 제목",
-          inpDt: "2021-01-11",
-          brdWriter: "김철수"
-        },
-        {
-          brdId: "3",
-          brdImpYn: "N",
-          brdTitle: "한 번에 불러올 때 총 10 ROW",
-          inpDt: "2021-01-11",
-          brdWriter: "김철수"
-        },
-        {
-          brdId: "4",
-          brdImpYn: "N",
-          brdTitle: "지금은 치기 귀찮아서 4 ROW",
-          inpDt: "2021-01-11",
-          brdWriter: "김철수"
-        }
-      ];
-      this.pageInfo = {
-        hasNextPage: true,
-        totalCount: 4
-        // lastPage: true,
-        // totalPages: 2
-      };
     },
     /** list 콜백 함수 */
     getBoardCB(response) {
-      // this.pageInfo = response.pageInfo;
-      // for (let n in response.boardList) {
-      //   this.boardList.push(response.boardList[n]);
-      // }
+      this.pageInfo = response.pageInfo;
+      for (let n in response.bnBrdList) {
+        this.bnBrdList.push(response.bnBrdList[n]);
+      }
     },
     boardClick(no) {
       this.$router.push({ path: "/board/" + no });

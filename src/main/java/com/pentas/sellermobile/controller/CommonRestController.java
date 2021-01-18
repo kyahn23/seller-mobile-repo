@@ -106,9 +106,7 @@ public class CommonRestController {
         user = cmmnDao.selectOne("sellermobile.common.selectUserInfo", bnMbrId);
 
         result.put("mbrNm", user.getMbrNm());
-        result.put("pwnoInitYn", user.getPwnoInitYn());
         result.put("mstMbrYn", user.getMstMbrYn());
-        result.put("bnCardChkYn", bnCardChkYn);
         result.put("bnName", bnName);
 //        result.put("user", user);
         return result;

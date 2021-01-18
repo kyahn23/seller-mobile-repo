@@ -1,7 +1,7 @@
 package com.pentas.sellermobile.controller;
 
 import com.pentas.sellermobile.common.module.util.DevMap;
-import com.pentas.sellermobile.service.CarrService;
+import com.pentas.sellermobile.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,10 +13,10 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
-public class CarrRestController {
+public class ProductRestController {
 
     @Autowired
-    CarrService carrService;
+    ProductService productService;
 
     /**
      * 요금제현황 가져오기
@@ -34,7 +34,7 @@ public class CarrRestController {
         DevMap rslt = new DevMap();
         List<DevMap> resultList = null;
 
-        resultList = carrService.mntrtList(param);
+        resultList = productService.mntrtList(param);
         rslt.put("mntrtList", resultList);
         return rslt;
     }
@@ -54,7 +54,7 @@ public class CarrRestController {
         for (DevMap list : param) {
             list.put("BN_MBR_ID", mbrId);      // 회원아이디
         }
-        carrService.insertUseMnt(param);
+        productService.insertUseMnt(param);
 
         // 정상적으로 insert
         rslt.put("succ", "Y");
@@ -77,7 +77,7 @@ public class CarrRestController {
             list.put("BN_MBR_ID", mbrId);      // 회원아이디
         }
 
-        carrService.deleteUseMnt(param);
+        productService.deleteUseMnt(param);
         rslt.put("succ", "Y");
 
         return rslt;
@@ -99,7 +99,7 @@ public class CarrRestController {
         DevMap rslt = new DevMap();
         List<DevMap> resultList = null;
 
-        resultList = carrService.getSellDeviceList(param);
+        resultList = productService.getSellDeviceList(param);
         rslt.put("sellDeviceList", resultList);
         return rslt;
     }
@@ -119,11 +119,11 @@ public class CarrRestController {
 
         DevMap rslt = new DevMap();
         List<DevMap> moveCarrList = null;
-        moveCarrList = carrService.getmoveCarrList(param);
+        moveCarrList = productService.getmoveCarrList(param);
         List<DevMap> chgDeviceList = null;
-        chgDeviceList = carrService.getchgDeviceList(param);
+        chgDeviceList = productService.getchgDeviceList(param);
         List<DevMap> newSignUpList = null;
-        newSignUpList = carrService.getnewSignUpList(param);
+        newSignUpList = productService.getnewSignUpList(param);
 
         rslt.put("moveCarrList", moveCarrList);
         rslt.put("chgDeviceList", chgDeviceList);
@@ -148,7 +148,7 @@ public class CarrRestController {
         }
 
         DevMap rslt = new DevMap();
-        carrService.stopSaleDevice(param);
+        productService.stopSaleDevice(param);
 
         rslt.put("succ", "Y");
         return rslt;
@@ -173,17 +173,31 @@ public class CarrRestController {
         DevMap rslt = new DevMap();
         switch (saleType) {
             case "moveCarr":
-                carrService.saveSalePolicyMoveCarr(param);
+                productService.saveSalePolicyMoveCarr(param);
                 break;
             case "chgDevice":
-                carrService.saveSalePolicyChgDev(param);
+                productService.saveSalePolicyChgDev(param);
                 break;
             case "newSignUp":
-                carrService.saveSalePolicyNewSignup(param);
+                productService.saveSalePolicyNewSignup(param);
                 break;
         }
 
         rslt.put("succ", "Y");
+        return rslt;
+    }
+
+    /**
+     * 기기 목록 조회
+     * @param request
+     * @param param
+     * @return
+     */
+    @PostMapping("/product/getDeviceList")
+    public DevMap getDeviceList(HttpServletRequest request, @RequestBody DevMap param) {
+        DevMap rslt = new DevMap();
+        List<DevMap> phoneList = productService.deviceList(param);
+        rslt.put("phoneList", phoneList);
         return rslt;
     }
 

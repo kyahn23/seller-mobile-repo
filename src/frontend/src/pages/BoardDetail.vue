@@ -16,39 +16,33 @@
               {{ boardInfo.brdTitle }}
             </q-item-label>
             <q-item-label caption>
-              {{ boardInfo.inpDt }} | {{ boardInfo.brdWriter }}
+              {{ boardInfo.brdRegDt }} | {{ boardInfo.brdWriterNm }}
             </q-item-label>
           </q-item-section>
         </q-item>
-        <q-separator />
-        <div class="row q-ma-sm q-px-sm full-width items-center">
+        <q-separator/>
+        <div class="row q-ma-sm q-px-sm full-width items-center" v-if="brdFileInfo.length > 0">
           <div class="q-px-xs text-caption text-weight-bold">첨부파일</div>
-          <div class="column q-px-sm">
-            <div
-              v-if="boardInfo.brdAttFile1"
-              style="border-bottom: 1px solid #000;"
-              @click="getFile(boardInfo.brdAttFile1)"
+          <div class="column q-px-sm" v-if="brdFileInfo.length > 0">
+            <div v-for="brdOneFile in brdFileInfo">
+            <span class="fit"
+                  style="border-bottom: 1px solid #000;"
+                  @click="getFile(brdOneFile.storFilNm)"
             >
-              {{ boardInfo.brdAttFile1 }}
-            </div>
-            <div
-              v-if="boardInfo.brdAttFile2"
-              style="border-bottom: 1px solid #000;"
-              @click="getFile(boardInfo.brdAttFile2)"
-            >
-              {{ boardInfo.brdAttFile2 }}
+              {{ brdOneFile.origFilNm }}
+            </span>
             </div>
           </div>
         </div>
-        <q-separator />
+        <q-separator/>
         <div class="q-ma-sm" style="min-height: 200px">
           <p class="full-width q-px-xs" style="word-break: keep-all;">
-            {{ boardInfo.brdContent }}
+            {{ boardInfo.brdCont }}
           </p>
         </div>
-        <q-separator />
+        <q-separator/>
         <div class="q-mt-md full-width text-center">
-          <q-btn unelevated color="primary" label="목록" @click="goToList" />
+          <q-btn unelevated color="primary" label="목록" @click="goToList"/>
         </div>
       </div>
     </q-list>
@@ -56,9 +50,9 @@
 </template>
 
 <script>
-import { scroll } from "quasar";
+import {scroll} from "quasar"
 
-const { getScrollTarget, setScrollPosition } = scroll;
+const {getScrollTarget, setScrollPosition} = scroll
 
 export default {
   name: "PageBoardDetail",
@@ -70,43 +64,36 @@ export default {
   },
   data() {
     return {
-      boardInfo: {}
-    };
+      boardInfo: {},
+      brdFileInfo: []
+    }
   },
   mounted() {
-    this.getBoardInfo();
+    this.getBoardInfo()
   },
   methods: {
     goToList() {
-      // this.$router.go(-1);
-      this.$router.push({ path: "/board" });
+      this.$router.push({path: "/board"})
     },
     getBoardInfo() {
-      //   this.$cf.call(
-      //     process.env.API + "/api/customer/boardDetail",
-      //     {
-      //       brdNo: this.brdNo
-      //     },
-      //     this.getBoardInfoCB,
-      //     true
-      //   );
-      this.boardInfo = {
-        brdId: "1",
-        brdImpYn: "Y",
-        brdTitle: "중요한 공지 제목",
-        brdContent: "중요한 공지 내용",
-        inpDt: "2021-01-12",
-        brdWriter: "홍길동",
-        brdAttFile1: "파일1.jpg",
-        brdAttFile2: "파일2.pdf"
-      };
+      this.$cf.call(
+        process.env.API + "/shop/getBnBrdOne",
+        {
+          brdNo: this.brdNo
+        },
+        this.getBoardInfoCB,
+        true
+      )
     },
     getBoardInfoCB(response) {
-      //   this.boardInfo = response;
+      this.boardInfo = response.bnBrdOne
+      this.brdFileInfo = response.brdOneCurFileInfo
     },
-    getFile(fileNm) {}
+    getFile(fileNm) {
+      window.location.href = process.env.API + "/downloadFile?fileName=" + fileNm
+    }
   }
-};
+}
 </script>
 
 <style scoped></style>

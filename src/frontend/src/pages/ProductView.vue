@@ -28,6 +28,7 @@
           v-model="selectMaker"
           :options="makerList"
           map-options
+          emit-value
         >
         </q-select>
       </div>
@@ -40,7 +41,8 @@
           outlined
           dense
           v-model="selectModel"
-          :options="modelList"
+          :options="phoneList"
+          emit-value
           map-options
         >
         </q-select>
@@ -130,20 +132,17 @@ export default {
   },
   data() {
     return {
-      selectMaker: "SAM",
+      selectMaker: "all",
       makerList: [
+        {label: "선택", value: "all"},
         {label: "삼성", value: "SAM"},
-        {label: "애플", value: "APL"},
-        {label: "LG", value: "LG"},
+        {label: "애플", value: "APP"},
+        {label: "LG", value: "LGE"},
+        {label: "샤오미", value: "XIA"},
         {label: "기타", value: "ETC"}
       ],
-      selectModel: "phone01",
-      modelList: [
-        {label: "폰01", value: "phone01"},
-        {label: "폰02", value: "phone02"},
-        {label: "폰03", value: "phone03"},
-        {label: "폰04", value: "phone04"}
-      ],
+      selectModel: {label: "선택", pnMdlNo: "all" },
+      phoneList: [],
       thisSelected: null,
       thisList: [],
       aList: [
@@ -200,6 +199,14 @@ export default {
     };
   },
   watch: {
+    carrier(val){
+      this.selectMaker = 'all'
+      this.selectModel = {
+        label:"선택", pnMdlNo:"all"
+      }
+      this.phoneList = []
+    },
+
     thisSelected: function (newValue, oldValue) {
       if (newValue === "a") {
         this.thisList = this.aList;
@@ -207,6 +214,15 @@ export default {
         this.thisList = this.bList;
       } else if (newValue === "c") {
         this.thisList = this.cList;
+      }
+    },
+    selectMaker(newValue, oldValue){
+      if (newValue !== oldValue){
+        this.selectModel = {
+          label:"선택", pnMdlNo:"all"
+        }
+        this.phoneList = []
+        this.getPhoneList(newValue)
       }
     }
   },
@@ -223,6 +239,28 @@ export default {
       const offset = ele.offsetTop - 1000;
       const duration = 200;
       setScrollPosition(target, offset, duration);
+    },
+    getPhoneList(val) {
+      let param = {
+        pnCarr: this.carrier.substr(0,1),
+        pnMkr: val
+      }
+      this.$cf.call(
+        process.env.API + "/product/getDeviceList",
+        param,
+        this.getPhoneListCB,
+        true
+      )
+    },
+    getPhoneListCB(response) {
+      const obj = {
+        label: "선택",
+        pnMdlNo: "all"
+      };
+      this.phoneList.push(obj);
+      for (let n in response.phoneList) {
+        this.phoneList.push(response.phoneList[n]);
+      }
     },
     setThisList(selected) {
       this.thisSelected = selected;

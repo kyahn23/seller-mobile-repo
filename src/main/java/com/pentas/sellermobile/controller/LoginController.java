@@ -88,9 +88,7 @@ public class LoginController {
 
             session.setAttribute("bnMbrId", userVO.getBnMbrId());
             session.setAttribute("mbrNm", userVO.getMbrNm());
-//            session.setAttribute("pwnoInitYn", userVO.getPwnoInitYn());
             session.setAttribute("mstMbrYn", userVO.getMstMbrYn());
-//            session.setAttribute("bnCardChkYn", bnCardChkYn);
             redirect.addFlashAttribute("loginStat", "SUCC");
             redirectMain = StringUtils.join(redirectMain, "?bnMbrId=", userVO.getBnMbrId());
 

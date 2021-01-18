@@ -181,7 +181,6 @@ export default {
   mounted() {
     let AuthChk = this.$store.getters.isAuth
 
-    console.log(AuthChk)
     if (AuthChk === false) {
       let currentPath = window.location.href
       let mbrId = currentPath.substring(currentPath.lastIndexOf('=') + 1)
@@ -204,29 +203,13 @@ export default {
       )
     },
     getInfoCB(response) {
-      console.log(response)
-
-
-      if (response.bnCardChkYn === 'N') {
-        this.bnCardChkYn = true
-        // alert("사업자등록증 확인중")
-      } else if (response.pwoInitYn === 'Y') {
-        alert("새로운 비밀번호 설정은 PC에서 진행해 주세요")
-      } else {
-        this.$store.commit("setAuth", {isAuth: true});
-        this.$store.commit("setMbrName", {mbrName: response.mbrNm});
-        this.$store.commit("setBnName", {bnName: response.bnName});
-      }
-
+      this.$store.commit("setAuth", {isAuth: true});
+      this.$store.commit("setMbrName", {mbrName: response.mbrNm});
+      this.$store.commit("setBnName", {bnName: response.bnName});
       // this.mainInit()
     },
     mainInit() {
-
     },
-    // goToLogin(){
-    //   this.$store.commit("setCurrentUser", {currentUser: ""})
-    //   window.location.href = process.env.API + "/logout"
-    // }
   },
   computed: {
     mbrNm: {

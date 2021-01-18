@@ -23,133 +23,29 @@
         WHERE BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
     </select>
 
-    <update id="updateShopInfo" parameterType="DevMap">
-        UPDATE TBL003
-        SET BN_REG_NO = #{bnRegNo}
-            ,BN_NM = #{bnNm}
-            ,OWNER_NM = #{ownerNm}
-            ,BN_REG_CARD = #{bnRegCard}
-            ,BN_ADDR_SIDO = #{bnAddrSido}
-            ,BN_ADDR_SIGG = #{bnAddrSigg}
-            ,BN_ADDR_DTL = #{bnAddrDtl}
-            ,CARD_CHK_YN = #{cardChkYn}
-            ,BN_PN_NO = #{bnPnNo}
-            ,BN_IMG = #{bnImg}
-            ,MKT_YN = #{mktYn}
-            ,DROPBY_YN = #{dropbyYn}
-            ,DROPBY_COST = #{dropbyCost}
-            ,AMD_DT = CURRENT_TIMESTAMP()
-        WHERE
-            BN_NO = #{bnNo}
-    </update>
-
-    <select id="getEmpList" resultType="DevMap" parameterType="DevMap">
-        SELECT
-            BN_MBR_ID
-            ,MBR_NM
-            ,MST_MBR_YN
-            ,SELLER_PRMS
-            ,LGIN_AVL_YN
-            ,ACTV_YN
-            ,DATE_FORMAT(AMD_DT, '%Y-%m-%d %H:%i') AS AMD_DT
-            ,(SELECT cf_get_mbr_nm(AMD_MBR_ID)) AS AMD_MBR_NM
-            ,DATE_FORMAT(AUTH_DT, '%Y-%m-%d %H:%i') AS AUTH_DT
-        FROM TBL002
-        WHERE
-            BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
-        <choose>
-            <when test="srchOptn == 'BYNM'">
-                AND MBR_NM LIKE CONCAT('%',#{srchTerm},'%')
-            </when>
-            <when test="srchOptn == 'BYID'">
-                AND BN_MBR_ID LIKE CONCAT('%',#{srchTerm},'%')
-            </when>
-            <otherwise/>
-        </choose>
-        ORDER BY MST_MBR_YN DESC, INP_DT ASC
-    </select>
-
-    <update id="updateEmpPwd" parameterType="DevMap">
-        UPDATE TBL002
-        SET PWD_NO = #{pwdNo}
-            ,PWNO_INIT_YN = 'Y'
-            ,PWERR_CNT = 0
-            ,LGIN_AVL_YN = 'Y'
-            ,AMD_DT = CURRENT_TIMESTAMP
-            ,AMD_MBR_ID = #{amdMbrId}
-        WHERE BN_MBR_ID = #{bnMbrId}
-    </update>
-
-    <update id="updateEmpPrms" parameterType="DevMap">
-        UPDATE TBL002
-        SET SELLER_PRMS = #{sellerPrms}
-            ,ACTV_YN = #{actvYn}
-            ,AMD_DT = CURRENT_TIMESTAMP
-            ,AMD_MBR_ID = #{amdMbrId}
-        WHERE BN_MBR_ID = #{bnMbrId}
-    </update>
-
-    <insert id="addBnBrd" parameterType="DevMap">
-        INSERT INTO TBL012 (
-            BRD_NO
-            ,BN_NO
-            ,BRD_TITLE
-            ,BRD_CONT
-            ,BRD_ATT_FILE_1
-            ,BRD_ATT_FILE_2
-            ,BRD_WRITER
-        ) VALUES (
-            IFNULL((SELECT MAX(BRD_NO) FROM TBL012 B WHERE BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))), 0) + 1
-            ,(SELECT cf_get_bn_no(#{bnMbrId}))
-            ,#{brdTitle}
-            ,#{brdCont}
-            ,#{brdAttFile1}
-            ,#{brdAttFile2}
-            ,#{bnMbrId}
-        )
-    </insert>
-
     <select id="getBnBrdList" resultType="DevMap" parameterType="DevMap">
         SELECT
             BRD_NO
             ,BRD_TITLE
-            ,SHOW_YN
-            ,BRD_REG_DT
-            ,BRD_WRITER_NM
-        FROM (
-            SELECT
-                BN_NO
-                ,BRD_NO
-                ,BRD_TITLE
-                ,SHOW_YN
-                ,DATE_FORMAT(BRD_REG_DT, '%Y-%m-%d %H:%i') AS BRD_REG_DT
-                ,(SELECT cf_get_mbr_nm(SRCTBL.BRD_WRITER)) AS BRD_WRITER_NM
-            FROM TBL012 SRCTBL
-        ) SELTBL
-        WHERE
-            SELTBL.BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
-        <choose>
-            <when test="srchOptn == 'BYTT'">
-                AND SELTBL.BRD_TITLE LIKE CONCAT('%',#{srchTerm},'%')
-            </when>
-            <when test="srchOptn == 'BYNM'">
-                AND SELTBL.BRD_WRITER_NM LIKE CONCAT('%',#{srchTerm},'%')
-            </when>
-            <otherwise/>
-        </choose>
-        ORDER BY SELTBL.BRD_REG_DT DESC
+            ,BRD_IMP_YN
+        ,DATE_FORMAT(BRD_REG_DT, '%Y-%m-%d %H:%i') AS BRD_REG_DT
+        ,(SELECT cf_get_mbr_nm(t.BRD_WRITER)) AS BRD_WRITER_NM
+        FROM TBL012 t
+        WHERE t.SHOW_YN = 'Y'
+            AND t.BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
+        <if test='searchKwd != ""'>
+            <choose>
+                <when test="selectOpt == 'boardTitle'">
+                    AND t.BRD_TITLE LIKE CONCAT('%',#{searchKwd},'%')
+                </when>
+                <when test="selectOpt == 'boardContent'">
+                    AND t.BRD_CONT LIKE CONCAT('%',#{searchKwd},'%')
+                </when>
+                <otherwise/>
+            </choose>
+        </if>
+        ORDER BY t.BRD_IMP_YN DESC, t.BRD_REG_DT DESC
     </select>
-
-    <update id="updateBnBrdHide" parameterType="DevMap">
-        UPDATE TBL012
-        SET SHOW_YN = 'N'
-            ,AMD_DT = CURRENT_TIMESTAMP
-        WHERE
-            BN_NO = (
-                SELECT cf_get_bn_no(#{bnMbrId})
-            )
-            AND BRD_NO = #{brdNo}
-    </update>
 
     <select id="getBnBrdOne" resultType="DevMap" parameterType="DevMap">
         SELECT
@@ -167,21 +63,5 @@
             BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
             AND BRD_NO = #{brdNo}
     </select>
-
-    <update id="updateBnBrdOne" parameterType="DevMap">
-        UPDATE TBL012
-        SET BRD_TITLE = #{brdTitle}
-            ,SHOW_YN = #{showYn}
-            ,BRD_REG_DT = CURRENT_TIMESTAMP
-            ,BRD_ATT_FILE_1 = #{brdAttFile1}
-            ,BRD_ATT_FILE_2 = #{brdAttFile2}
-            ,BRD_CONT = #{brdCont}
-            ,AMD_DT = CURRENT_TIMESTAMP
-        WHERE
-            BN_NO = (
-                SELECT cf_get_bn_no(#{bnMbrId})
-            )
-            AND BRD_NO = #{brdNo}
-    </update>
 
 </mapper>

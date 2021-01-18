@@ -320,19 +320,7 @@ public class CounselRestController {
         return rslt;
     }
 
-    /**
-     * 기기 목록 조회
-     * @param request
-     * @param param
-     * @return
-     */
-    @PostMapping("/service/getDeviceList")
-    public DevMap getDeviceList(HttpServletRequest request, @RequestBody DevMap param) {
-        DevMap rslt = new DevMap();
-        List<DevMap> deviceList = counselService.deviceList(param);
-        rslt.put("deviceList", deviceList);
-        return rslt;
-    }
+
 
     /**
      * 마케팅 상세 정보 저장
