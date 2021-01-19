@@ -22,7 +22,7 @@ const routes = [
       },
       { path: 'status', component: () => import('pages/Status.vue') },
       {
-        path: "status/detail/:dealno",
+        path: "status/detail/:csNo",
         component: () => import("pages/Status_Detail.vue"),
         meta: {
           titleLabel: "상담상세정보"

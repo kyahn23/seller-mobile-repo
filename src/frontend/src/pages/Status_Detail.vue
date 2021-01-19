@@ -127,7 +127,7 @@
 
 <script>
 export default {
-  name: "Status",
+  name: "Status Detail",
   data() {
     return {
       pageInit: false,
@@ -141,52 +141,17 @@ export default {
       dealList: [
         {mntCarr: "SKT", pnRegDis: "번호이동", pnMntRtNm: "요금제이름"}
       ],
-      sales: true
+      sales: true,
+      cs: {}
     }
   },
+  mounted() {
+    this.cs = this.$store.getters.cs
+    console.log(this.cs)
+    this.$store.commit("setCs", {cs: {}})
+    console.log(this.$store.getters.cs)
+  },
   methods: {
-    /** 맨 위로 돌아가기 이벤트 */
-    scrollTop() {
-      const ele = document.getElementById("top");
-      const target = getScrollTarget(ele);
-      const offset = ele.offsetTop - 1000;
-      const duration = 200;
-      setScrollPosition(target, offset, duration);
-    },
-    /** infinite scroll 이벤트 */
-    onScrollLoad(index, done) {
-      setTimeout(() => {
-        if (index === 1) {
-          this.getList(index + "");
-          done();
-        } else if (this.pageInfo.hasNextPage) {
-          this.getList(this.pageInfo.nextPage + "");
-          done();
-        }
-      }, 2000);
-    },
-    getList(page) {
-      // this.$cf.call(
-      //   process.env.API + "/api/deal/list",
-      //   {
-      //     email: this.currentUser,
-      //     page: page
-      //   },
-      //   this.getListCB,
-      //   true
-      // );
-    },
-    /** list 콜백 함수 */
-    getListCB(response) {
-      // this.pageInfo = response.pageInfo;
-      // for (let n in response.dealList) {
-      //   this.dealList.push(response.dealList[n]);
-      // }
-      // this.pageInit = true;
-    },
-    saleChg() {
-      this.sales = !this.sales
-    },
     goToList() {
       this.$router.push({path: "/status"});
     }

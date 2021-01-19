@@ -19,7 +19,8 @@ export default function() {
       isAuth: false,
       currentUser: "",
       mbrName: "",
-      bnName:""
+      bnName:"",
+      cs:{}
     },
     getters: {
       isLoading: state => state.isLoading,
@@ -29,7 +30,8 @@ export default function() {
       isAuth: state => state.isAuth,
       currentUser: state => state.currentUser,
       mbrName: state => state.mbrName,
-      bnName: state => state.bnName
+      bnName: state => state.bnName,
+      cs: state => state.cs
     },
     mutations: {
       setLoading(state, payload) {
@@ -61,6 +63,9 @@ export default function() {
       },
       setBnName(state, payload){
         state.bnName = payload.bnName
+      },
+      setCs(state, payload){
+        state.cs = payload.cs
       }
     }
   });

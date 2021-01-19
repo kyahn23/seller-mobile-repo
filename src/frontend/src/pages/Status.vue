@@ -35,26 +35,29 @@
     <q-separator/>
     <q-list>
       <q-infinite-scroll @load="onScrollLoad" :offset="110">
-        <div v-for="(cs, idx) in counselList" :key="idx">
+        <div v-for="(cs, idx) in counselList" :key="idx" style="border-bottom: 1px lightgrey solid">
           <q-item class="q-py-md">
             <q-item-section avatar>
-              <q-avatar square size="4em">
+              <q-avatar square size="5em">
                 <img :src="$cf.imagePath(cs.pnImg)">
               </q-avatar>
             </q-item-section>
             <q-item-section>
-              <q-item-label class="text-caption text-weight-medium" style="font-size: 0.8em;">
+              <q-item-label class="text-caption text-weight-medium" style="font-size: 1em;">
                 <span class="q-mr-sm">{{cs.clMbrNm}}</span>
                 <!-- 상담상태에 따른 색 변경 필요 -->
-                <span class="bg-green-3 rounded-borders text-white q-pa-xs">{{cs.callStCd}}</span>
+                <span v-if="cs.callStCd === 'R'" class="bg-deep-orange-3 rounded-borders text-white q-pa-xs">상담접수</span>
+                <span v-else-if="cs.callStCd === 'P'" class="bg-green-3 rounded-borders text-white q-pa-xs">방문예정</span>
+                <span v-else-if="cs.callStCd === 'T'" class="bg-blue-3 rounded-borders text-white q-pa-xs">개통완료</span>
+                <span v-else-if="cs.callStCd === 'E' || cs.callStCd === 'C'" class="bg-grey-6 rounded-borders text-white q-pa-xs">미개통</span>
               </q-item-label>
-              <q-item-label class="text-caption" style="font-size: 0.8em;">
-                {{ cs.pnMdlNo }} {{cs.pnStor}}GB
+              <q-item-label class="text-caption" style="font-size: 1em;">
+                {{ cs.pnMdlNm }} {{cs.pnStor}}GB
               </q-item-label>
-              <q-item-label class="text-caption" style="font-size: 0.8em;">
+              <q-item-label class="text-caption" style="font-size: 1em;">
                 {{ cs.mntCarr }} / {{cs.pnRegDis}} / {{cs.pnMntRtNm}}
               </q-item-label>
-              <q-item-label class="text-caption" style="font-size: 0.8em;">
+              <q-item-label class="text-caption" style="font-size: 1em;" v-if="cs.mbrNm">
                 등록자 : {{cs.mbrNm}}
               </q-item-label>
             </q-item-section>
@@ -62,11 +65,11 @@
               <q-icon
                 name="chevron_right"
                 color="black"
-                @click="dealClick(1)"
+                @click="dealClick(cs, idx)"
               />
             </q-item-section>
           </q-item>
-          <q-separator/>
+<!--          <q-separator/>-->
         </div>
       </q-infinite-scroll>
       <q-item class="q-py-md" v-if="this.pageInfo.hasNextPage">
@@ -148,6 +151,7 @@ export default {
       }, 2000);
     },
     searchBtn(){
+      this.counselList = []
       this.getList(this.page)
     },
     getList(page) {
@@ -177,8 +181,9 @@ export default {
       this.myClient = !this.myClient
     },
     /** > 클릭 이벤트 */
-    dealClick(dealNo) {
-      this.$router.push({path: "/status/detail/" + dealNo});
+    dealClick(obj, idx) {
+      this.$store.commit("setCs", {cs: obj});
+      this.$router.push({path: "/status/detail/" + idx});
     },
   }
 

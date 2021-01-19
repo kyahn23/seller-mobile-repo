@@ -5,7 +5,7 @@
     <select id="counselList" resultType="DevMap" parameterType="DevMap">
         select T.CALL_ST_CD,
         t1.MNT_CARR,
-        (SELECT CD_NM FROM TBL_CMMN_CD tcc WHERE tcc.CD_VAL = t1.PN_REG_DIS) as PN_REG_DIS,,
+        (SELECT CD_NM FROM TBL_CMMN_CD tcc WHERE tcc.CD_VAL = t1.PN_REG_DIS) as PN_REG_DIS,
         (select PN_MNT_RT_NM FROM TBL010 tt1 where tt1.PN_MNT_RT_NO = t1.PN_MNT_RT_NO) as PN_MNT_RT_NM,
         (select PN_NET_TYPE FROM TBL010 tt1 where tt1.PN_MNT_RT_NO = t1.PN_MNT_RT_NO) as PN_NET_TYPE,
         t1.PN_MNT_RT_NO,
