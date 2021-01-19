@@ -5,7 +5,7 @@
     <select id="counselList" resultType="DevMap" parameterType="DevMap">
         select T.CALL_ST_CD,
         t1.MNT_CARR,
-        t1.PN_REG_DIS,
+        (SELECT CD_NM FROM TBL_CMMN_CD tcc WHERE tcc.CD_VAL = t1.PN_REG_DIS) as PN_REG_DIS,,
         (select PN_MNT_RT_NM FROM TBL010 tt1 where tt1.PN_MNT_RT_NO = t1.PN_MNT_RT_NO) as PN_MNT_RT_NM,
         (select PN_NET_TYPE FROM TBL010 tt1 where tt1.PN_MNT_RT_NO = t1.PN_MNT_RT_NO) as PN_NET_TYPE,
         t1.PN_MNT_RT_NO,
@@ -13,6 +13,7 @@
         (select DISTINCT PN_MDL_NM FROM TBL011 tt2 where tt2.PN_MDL_NO = t1.PN_MDL_NO) as PN_MDL_NM,
         t1.PN_STOR,
         (select PN_MSRP FROM TBL011 tt4 where tt4.PN_MDL_NO = t1.PN_MDL_NO and tt4.PN_STOR = t1.PN_STOR) as PN_MSRP,
+        (SELECT t.PN_IMG FROM TBL011 t WHERE t.PN_MDL_NO =t1.PN_MDL_NO GROUP BY t.PN_MDL_NO) as PN_IMG,
         (SELECT MBR_NM FROM TBL001 tt3 where tt3.CL_MBR_ID = t1.CL_MBR_ID) as CL_MBR_NM,
         t1.CL_MBR_ID,
         (SELECT DISTINCT PN_MKR FROM TBL011 pnmkr where pnmkr.PN_MDL_NO = t1.PN_MDL_NO) as PN_MKR,
@@ -45,27 +46,16 @@
         DATE_FORMAT(T.INP_DT, '%Y-%m-%d %H:%i') as INP_DT,
         DATE_FORMAT(T.AMD_DT, '%Y-%m-%d %H:%i') as AMD_DT
         from TBL008 T left join TBL006 t1 on T.DEAL_NO = t1.DEAL_NO
-        where T.BN_NO = (SELECT cf_get_bn_no(#{loginMbrId}))
-        <if test='callStCd != null and !callStCd.equals("all")'>
-            and T.CALL_ST_CD = #{callStCd}
-            <if test='visitDt != null'>
-                and DATE_FORMAT(T.VISIT_DT, '%Y-%m-%d') = #{visitDt}
-            </if>
-        </if>
-        <if test='mntCarr != null and !mntCarr.equals("all")'>
-            and t1.MNT_CARR = #{mntCarr}
-        </if>
-        <if test='counselType != null and !counselType.equals("all")'>
-            and t1.PN_REG_DIS = #{counselType}
-        </if>
-        <if test='clientNm != "" and clientNm != null'>
-            and (SELECT MBR_NM FROM TBL001 tt5 where tt5.CL_MBR_ID = t1.CL_MBR_ID) LIKE CONCAT('%', #{clientNm}, '%')
-        </if>
-        <if test='bnMbr !="all"'>
-            and T.BN_MBR_ID = #{bnMbr}
-        </if>
-        <if test='searchDay != null'>
-            and DATE_FORMAT(T.AMD_DT, '%Y-%m-%d') = #{searchDay}
+        WHERE T.BN_NO = (SELECT cf_get_bn_no(#{loginMbrId}))
+        <if test='searchKwd != ""'>
+            <choose>
+                <when test="selectOpt == 'clientNm'">
+                    AND (SELECT MBR_NM FROM TBL001 tt5 where tt5.CL_MBR_ID = t1.CL_MBR_ID) LIKE CONCAT('%', #{searchKwd}, '%')
+                </when>
+                <when test="selectOpt == 'clientNum'">
+                    AND T.MBR_PN_NO LIKE CONCAT('%', #{searchKwd}, '%')
+                </when>
+            </choose>
         </if>
         ORDER BY AMD_DT desc
     </select>

@@ -38,46 +38,6 @@
         <!--        ORDER BY PN_NET_TYPE desc, PN_MNT_AMT+0 desc-->
     </select>
 
-    <!-- 요금제 사용 -->
-    <insert id="useMntRt" parameterType="DevMap">
-        insert into TBL013 (
-        BN_NO,
-        PN_MNT_RT_NO,
-        INP_DT,
-        AMD_DT,
-        AMD_MBR_ID
-        ) values (
-        (SELECT cf_get_bn_no(#{bnMbrId})),
-        #{pnMntRtNo},
-        SYSDATE(),
-        SYSDATE(),
-        #{bnMbrId}
-        )
-    </insert>
-
-    <!-- 요금제미사용처리 -->
-    <delete id="nUseMntRt" parameterType="DevMap">
-        delete from TBL013
-        where PN_MNT_RT_NO = #{pnMntRtNo}
-        and BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
-    </delete>
-
-    <!-- 요금제사용여부내역 log -->
-    <insert id="useYnHistory" parameterType="DevMap">
-        insert into TBL015 (
-        BN_NO,
-        PN_MNT_RT_NO,
-        USE_YN,
-        INP_DT,
-        AMD_MBR_ID
-        ) values (
-        (SELECT cf_get_bn_no(#{bnMbrId})),
-        #{pnMntRtNo},
-        #{useYn},
-        SYSDATE(),
-        #{bnMbrId}
-        )
-    </insert>
 
     <select id="sellDeviceList" parameterType="DevMap" resultType="DevMap">
         <![CDATA[
@@ -232,17 +192,26 @@
     </select>
 
     <select id="moveCarrList" parameterType="DevMap" resultType="DevMap">
-        select T.*,
-        ta.*
-        from (select a.PN_MNT_RT_NO,
+        SELECT T.PN_MNT_RT_NM,
+        T.PN_MNT_RT_NO,
+        T.PN_MNT_AMT,
+        ta.PN_MDL_NO,
+        ta.PN_STOR,
+        (SELECT PN_MSRP FROM TBL011 msrp where msrp.PN_MDL_NO = ta.PN_MDL_NO and msrp.PN_STOR = ta.PN_STOR) as PN_MSRP,
+        ta.PN_OFCL_SUBSD,
+        ta.PN_EXT_SUBSD_DV,
+        ta.PN_EXT_SUBSD_RT,
+        ta.PN_EXT_SERV_YN,
+        ta.PN_ETC
+        FROM (SELECT a.PN_MNT_RT_NO,
         a.PN_MNT_RT_NM,
         a.PN_MNT_AMT
-        from TBL010 a, TBL013 b
+        FROM TBL010 a, TBL013 b
         WHERE a.PN_MNT_RT_NO = b.PN_MNT_RT_NO
         and b.BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
         and a.PN_CARR =#{pnCarr}
-        and a.PN_NET_TYPE =#{pnNetType}) T left join (
-        select PN_MDL_NO,
+        and a.PN_NET_TYPE =#{pnNetType}) T INNER JOIN (
+        SELECT PN_MDL_NO,
         PN_MNT_RT_NO,
         PN_OFCL_SUBSD,
         PN_EXT_SUBSD_DV,
@@ -251,24 +220,35 @@
         PN_ETC,
         SELL_YN,
         PN_STOR
-        from `TBL007-A`
-        where PN_MDL_NO = #{pnMdlNo} and BN_NO = (SELECT cf_get_bn_no(#{bnMbrId})) and PN_STOR=#{pnStor}) ta
-        on T.PN_MNT_RT_NO = ta.PN_MNT_RT_NO
+        FROM `TBL007-A`
+        WHERE PN_MDL_NO = #{pnMdlNo}
+        AND SELL_YN = 'Y'
+        AND BN_NO = (SELECT cf_get_bn_no(#{bnMbrId})) AND PN_STOR=#{pnStor}) ta
+        ON T.PN_MNT_RT_NO = ta.PN_MNT_RT_NO
         ORDER BY convert(PN_MNT_AMT, decimal) DESC
     </select>
 
     <select id="chgDeviceList" parameterType="DevMap" resultType="DevMap">
-        select T.*,
-        tb.*
-        from (select a.PN_MNT_RT_NO,
+        SELECT T.PN_MNT_RT_NM,
+        T.PN_MNT_RT_NO,
+        T.PN_MNT_AMT,
+        tb.PN_MDL_NO,
+        tb.PN_STOR,
+        (SELECT PN_MSRP FROM TBL011 msrp where msrp.PN_MDL_NO = tb.PN_MDL_NO and msrp.PN_STOR = tb.PN_STOR) as PN_MSRP,
+        tb.PN_OFCL_SUBSD,
+        tb.PN_EXT_SUBSD_DV,
+        tb.PN_EXT_SUBSD_RT,
+        tb.PN_EXT_SERV_YN,
+        tb.PN_ETC
+        FROM (SELECT a.PN_MNT_RT_NO,
         a.PN_MNT_RT_NM,
         a.PN_MNT_AMT
-        from TBL010 a, TBL013 b
+        FROM TBL010 a, TBL013 b
         WHERE a.PN_MNT_RT_NO = b.PN_MNT_RT_NO
-        and b.BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
-        and a.PN_CARR =#{pnCarr}
-        and a.PN_NET_TYPE =#{pnNetType}) T left join (
-        select PN_MDL_NO,
+        AND b.BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
+        AND a.PN_CARR =#{pnCarr}
+        AND a.PN_NET_TYPE =#{pnNetType}) T INNER JOIN (
+        SELECT PN_MDL_NO,
         PN_MNT_RT_NO,
         PN_OFCL_SUBSD,
         PN_EXT_SUBSD_DV,
@@ -277,24 +257,35 @@
         PN_ETC,
         SELL_YN,
         PN_STOR
-        from `TBL007-B`
-        where PN_MDL_NO = #{pnMdlNo} and BN_NO = (SELECT cf_get_bn_no(#{bnMbrId})) and PN_STOR=#{pnStor}) tb
-        on T.PN_MNT_RT_NO = tb.PN_MNT_RT_NO
+        FROM `TBL007-B`
+        WHERE PN_MDL_NO = #{pnMdlNo}
+        AND SELL_YN = 'Y'
+        and BN_NO = (SELECT cf_get_bn_no(#{bnMbrId})) AND PN_STOR=#{pnStor}) tb
+        ON T.PN_MNT_RT_NO = tb.PN_MNT_RT_NO
         ORDER BY convert(PN_MNT_AMT, decimal) DESC
     </select>
 
     <select id="newSignUpList" parameterType="DevMap" resultType="DevMap">
-        select T.*,
-        tc.*
-        from (select a.PN_MNT_RT_NO,
+        SELECT T.PN_MNT_RT_NM,
+        T.PN_MNT_RT_NO,
+        T.PN_MNT_AMT,
+        tc.PN_MDL_NO,
+        tc.PN_STOR,
+        (SELECT PN_MSRP FROM TBL011 msrp where msrp.PN_MDL_NO = tc.PN_MDL_NO and msrp.PN_STOR = tc.PN_STOR) as PN_MSRP,
+        tc.PN_OFCL_SUBSD,
+        tc.PN_EXT_SUBSD_DV,
+        tc.PN_EXT_SUBSD_RT,
+        tc.PN_EXT_SERV_YN,
+        tc.PN_ETC
+        FROM (SELECT a.PN_MNT_RT_NO,
         a.PN_MNT_RT_NM,
         a.PN_MNT_AMT
-        from TBL010 a, TBL013 b
+        FROM TBL010 a, TBL013 b
         WHERE a.PN_MNT_RT_NO = b.PN_MNT_RT_NO
-        and b.BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
-        and a.PN_CARR =#{pnCarr}
-        and a.PN_NET_TYPE =#{pnNetType}) T left join (
-        select PN_MDL_NO,
+        AND b.BN_NO = (SELECT cf_get_bn_no(#{bnMbrId}))
+        AND a.PN_CARR =#{pnCarr}
+        AND a.PN_NET_TYPE =#{pnNetType}) T INNER JOIN (
+        SELECT PN_MDL_NO,
         PN_MNT_RT_NO,
         PN_OFCL_SUBSD,
         PN_EXT_SUBSD_DV,
@@ -303,9 +294,11 @@
         PN_ETC,
         SELL_YN,
         PN_STOR
-        from `TBL007-C`
-        where PN_MDL_NO = #{pnMdlNo} and BN_NO = (SELECT cf_get_bn_no(#{bnMbrId})) and PN_STOR=#{pnStor}) tc
-        on T.PN_MNT_RT_NO = tc.PN_MNT_RT_NO
+        FROM `TBL007-C`
+        WHERE PN_MDL_NO = #{pnMdlNo}
+        and SELL_YN = 'Y'
+        and BN_NO = (SELECT cf_get_bn_no(#{bnMbrId})) AND PN_STOR=#{pnStor}) tc
+        ON T.PN_MNT_RT_NO = tc.PN_MNT_RT_NO
         ORDER BY convert(PN_MNT_AMT, decimal) DESC
     </select>
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-cloak>
     <div id="top" class="q-pt-md">
       <div class="q-px-md q-mb-xs">
         <span class="text-subtitle1 text-weight-bold">공지사항</span>
@@ -123,11 +123,8 @@ export default {
       ],
       searchKwd: "",
       page: "1",
-      /** 페이지 초기화 여부 */
       pageInit: false,
-      /** 페이징 처리 정보 */
       pageInfo: {},
-      /** 공지사항리스트 */
       bnBrdList: []
     };
   },

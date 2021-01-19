@@ -18,7 +18,6 @@ public class CounselRestController {
     @Autowired
     CounselService counselService;
 
-
     /**
      * 상담접수현황 목록
      * @param param
@@ -56,7 +55,6 @@ public class CounselRestController {
         rslt = counselService.getCurrPolicy(param);
         return rslt;
     }
-
 
     /**
      * 방문예정 상담목록 가져오기
@@ -103,7 +101,7 @@ public class CounselRestController {
      * @param param
      * @return
      */
-    @PostMapping("/service/getAllCounselList")
+    @PostMapping("/status/getAllCounselList")
     public DevMap getAllCounselList(@RequestBody DevMap param, HttpServletRequest request) {
         //        세션에서 회원아이디 가져오기
         HttpSession session = request.getSession();
@@ -111,73 +109,12 @@ public class CounselRestController {
         param.put("LOGIN_MBR_ID", loginMbrId);
 
         DevMap rslt = new DevMap();
-//        param.put("CALL_ST_CD", "all");
+        param.put("CALL_ST_CD", "all");
 
         PageList<DevMap> listPage = counselService.counselList(param);
 
         rslt.put("counselList", listPage);
         rslt.put("pageInfo", listPage.getPaginator());
-        return rslt;
-    }
-
-    /**
-     * 상담거절
-     * @param param
-     * @param request
-     * @return
-     */
-    @PostMapping("/service/refuseCounsel")
-    public DevMap refuseCounsel(@RequestBody DevMap param, HttpServletRequest request){
-//        세션에서 회원아이디 가져오기
-        HttpSession session = request.getSession();
-        String loginMbrId = (String) session.getAttribute("bnMbrId");
-        param.put("LOGIN_MBR_ID", loginMbrId);
-
-        param.put("CALL_ST_CD", "E");   // 상담상태 미개통(종료)으로 변경
-
-        DevMap rslt = new DevMap();
-        counselService.refuseCounsel(param);
-
-        rslt.put("succ", "Y");
-        return rslt;
-    }
-
-    /**
-     * 상담결과저장
-     * @param param
-     * @return
-     */
-    @PostMapping("/service/saveCounsel")
-    public DevMap saveCounsel(@RequestBody DevMap param, HttpServletRequest request) {
-        //        세션에서 회원아이디 가져오기
-        HttpSession session = request.getSession();
-        String loginMbrId = (String) session.getAttribute("bnMbrId");
-        param.put("LOGIN_MBR_ID", loginMbrId);
-        param.put("CALL_ST_CD", "P");   // 상담상태 진행중으로 변경
-
-        DevMap rslt = new DevMap();
-        counselService.saveCounsel(param);
-
-        rslt.put("succ", "Y");
-        return rslt;
-    }
-
-    /**
-     * 방문예정일시 변경
-     * @param param
-     * @return
-     */
-    @PostMapping("/service/modiVisitDt")
-    public DevMap modiVisitDt(@RequestBody DevMap param, HttpServletRequest request) {
-        //        세션에서 회원아이디 가져오기
-        HttpSession session = request.getSession();
-        String loginMbrId = (String) session.getAttribute("bnMbrId");
-        param.put("LOGIN_MBR_ID", loginMbrId);
-
-        DevMap rslt = new DevMap();
-        counselService.modiVisitDt(param);
-
-        rslt.put("succ", "Y");
         return rslt;
     }
 
@@ -203,89 +140,6 @@ public class CounselRestController {
 
         resultList = counselService.allDeviceListByCarr(param);
         rslt.put("deviceList", resultList);
-        return rslt;
-    }
-
-    /**
-     * 개통결과 등록
-     * @param param
-     * @param request
-     * @return
-     */
-    @PostMapping("/service/registerRslt")
-    public DevMap registerRslt(@RequestBody DevMap param, HttpServletRequest request) {
-        //        세션에서 회원아이디 가져오기
-        HttpSession session = request.getSession();
-        String loginMbrId = (String) session.getAttribute("bnMbrId");
-        param.put("LOGIN_MBR_ID", loginMbrId);
-
-        DevMap rslt = new DevMap();
-
-        counselService.registerRslt(param);
-
-        String modiYn = "";
-        modiYn = param.getString("modiYn", "");
-        String callStatus = param.getString("callStCd");
-        if (!modiYn.equals("Y")){
-            // 상담 종료 확인
-            if (callStatus.equals("T")) {
-                // 클라이언트 회원 마케팅 동의 여부 확인 후 마케팅 대상 추가
-                String clientMarketing = counselService.checkClientMarketing(param);
-                if (clientMarketing.equals("Y")) {
-                    counselService.newMarketingOne(param);
-                }
-            }
-        }
-        if (callStatus.equals("E")){
-            if (param.getBoolean("blackYn")){
-                counselService.addBlkClient(param);
-            }
-        }
-
-        rslt.put("succ", "Y");
-        return rslt;
-    }
-
-    @PostMapping("/service/blackYnChk")
-    public DevMap blackYnChk(@RequestBody DevMap param){
-        return counselService.blackYnChk(param);
-    }
-
-    /**
-     * 마케팅 대상 목록 조회
-     * @param param
-     * @return
-     */
-    @PostMapping("/service/getMarketingList")
-    public DevMap getMarketingList(HttpServletRequest request, @RequestBody DevMap param) {
-        HttpSession session = request.getSession();
-        String bnMbrId = (String) session.getAttribute("bnMbrId");
-        param.put("bnMbrId", bnMbrId);
-
-        DevMap rslt = new DevMap();
-
-        PageList<DevMap> listPage = counselService.marketingList(param);
-
-        rslt.put("mktList", listPage);
-        rslt.put("pageInfo", listPage.getPaginator());
-        return rslt;
-    }
-
-    /**
-     * 마케팅 결과 상세 조회
-     * @param param
-     * @return
-     */
-    @PostMapping("/service/getMarketingOne")
-    public DevMap getMarketingOne(@RequestBody DevMap param) {
-        DevMap rslt = new DevMap();
-        DevMap marketingOne = counselService.marketingOne(param);
-        String pnMkrOne = "";
-        if (marketingOne.getString("pnMdl") != null) {
-            pnMkrOne = counselService.pnMkrOne(marketingOne.getString("pnMdl"));
-            marketingOne.put("pnMkr", pnMkrOne);
-        }
-        rslt.put("mktOne", marketingOne);
         return rslt;
     }
 
@@ -317,40 +171,6 @@ public class CounselRestController {
         DevMap rslt = new DevMap();
         List<String> pnMkr = counselService.pnMkr(param);
         rslt.put("pnMkr", pnMkr);
-        return rslt;
-    }
-
-
-
-    /**
-     * 마케팅 상세 정보 저장
-     * @param param
-     * @return
-     */
-    @PostMapping("/service/saveMarketingOne")
-    public DevMap saveMarketingOne(@RequestBody DevMap param) {
-        counselService.saveMarketingOne(param);
-
-        DevMap rslt = new DevMap();
-        rslt.put("rsltStat", "SUCC");
-        return rslt;
-    }
-
-    /**
-     * 마케팅 상세 정보 저장 (신규, 별도 개통)
-     * @param param
-     * @return
-     */
-    @PostMapping("/service/saveMarketingNew")
-    public DevMap saveMarketingNew(HttpServletRequest request, @RequestBody DevMap param) {
-        HttpSession session = request.getSession();
-        String bnMbrId = (String) session.getAttribute("bnMbrId");
-        param.put("bnMbrId", bnMbrId);
-
-        counselService.saveMarketingNew(param);
-
-        DevMap rslt = new DevMap();
-        rslt.put("rsltStat", "SUCC");
         return rslt;
     }
 

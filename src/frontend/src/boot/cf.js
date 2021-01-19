@@ -167,7 +167,7 @@ export default async ({ Vue, store }) => {
      */
     imagePath(imageName) {
       if (imageName !== undefined && imageName !== null && imageName !== "") {
-        return process.env.API + "/api/common/image?filename=" + imageName;
+        return process.env.API + "/image?filename=" + imageName;
       } else {
         return "";
       }

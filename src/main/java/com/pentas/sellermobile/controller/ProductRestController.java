@@ -110,7 +110,7 @@ public class ProductRestController {
      * @param param
      * @return
      */
-    @PostMapping("/carr/getUseMntByDevice")
+    @PostMapping("/product/getUseMntByDevice")
     public DevMap getUseMntByDevice(@RequestBody DevMap param, HttpServletRequest request) {
         //        세션에서 회원아이디 가져오기
         HttpSession session = request.getSession();
@@ -129,61 +129,6 @@ public class ProductRestController {
         rslt.put("chgDeviceList", chgDeviceList);
         rslt.put("newSignUpList", newSignUpList);
 
-        return rslt;
-    }
-
-    /**
-     * 제품현황-판매중지처리
-     *
-     * @param param
-     * @return
-     */
-    @PostMapping("/carr/stopSaleDev")
-    public DevMap stopSaleDevice(@RequestBody List<DevMap> param, HttpServletRequest request) {
-        //        세션에서 회원아이디 가져오기
-        HttpSession session = request.getSession();
-        String mbrId = (String) session.getAttribute("bnMbrId");
-        for (DevMap list : param) {
-            list.put("BN_MBR_ID", mbrId);      // 회원아이디
-        }
-
-        DevMap rslt = new DevMap();
-        productService.stopSaleDevice(param);
-
-        rslt.put("succ", "Y");
-        return rslt;
-    }
-
-    /**
-     * 판매정책별 저장
-     *
-     * @param saleType
-     * @param param
-     * @return
-     */
-    @PostMapping("/carr/saveSalePolicy/{saleType}")
-    public DevMap saveSalePolicy(@PathVariable String saleType, @RequestBody List<DevMap> param, HttpServletRequest request) {
-        //        세션에서 회원아이디 가져오기
-        HttpSession session = request.getSession();
-        String mbrId = (String) session.getAttribute("bnMbrId");
-        for (DevMap list : param) {
-            list.put("BN_MBR_ID", mbrId);      // 회원아이디
-        }
-
-        DevMap rslt = new DevMap();
-        switch (saleType) {
-            case "moveCarr":
-                productService.saveSalePolicyMoveCarr(param);
-                break;
-            case "chgDevice":
-                productService.saveSalePolicyChgDev(param);
-                break;
-            case "newSignUp":
-                productService.saveSalePolicyNewSignup(param);
-                break;
-        }
-
-        rslt.put("succ", "Y");
         return rslt;
     }
 

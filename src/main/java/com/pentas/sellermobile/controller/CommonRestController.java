@@ -25,54 +25,6 @@ public class CommonRestController {
     CmmnDao cmmnDao;
 
     /**
-     * 멤버 ID (이메일) 중복 확인 (return 객체에 중복 여부)
-     *
-     * @param request
-     * @param param
-     * @return
-     */
-    @PostMapping("/member/checkId")
-    public DevMap checkMemberId(HttpServletRequest request, @RequestBody DevMap param) {
-        String chkMbrId = commonService.checkMemberId(param);
-
-        DevMap rslt = new DevMap();
-        rslt.put("chkMbrId", chkMbrId);
-        return rslt;
-    }
-
-    /**
-     * 초기화 비밀번호 변경
-     *
-     * @param request
-     * @param param
-     * @return
-     */
-    @PostMapping("/member/updateMbrPw")
-    public DevMap updateMbrPw(HttpServletRequest request, @RequestBody DevMap param) {
-        HttpSession session = request.getSession();
-        String bnMbrId = (String) session.getAttribute("bnMbrId");
-        param.put("bnMbrId", bnMbrId);
-        commonService.updateMbrPw(param);
-
-        DevMap rslt = new DevMap();
-        rslt.put("rsltStat", "SUCC");
-        return rslt;
-    }
-
-    /**
-     * 이미지 태그의 src에 소스정보를 제공한다.
-     *
-     * @param request
-     * @param response
-     * @throws UserException
-     */
-    @RequestMapping("/imageSrc")
-    public void downloadImage(HttpServletRequest request, HttpServletResponse response) throws UserException {
-        String fileName = request.getParameter("fileName");
-        commonService.imageSrc(response, fileName);
-    }
-
-    /**
      * 파일 다운로드
      *
      * @param request
@@ -112,6 +64,10 @@ public class CommonRestController {
         return result;
     }
 
-
+    @RequestMapping("/image")
+    public void getImage(HttpServletRequest request, HttpServletResponse response) throws UserException {
+        String filename = request.getParameter("filename");
+        commonService.imageSrc(response, filename);
+    }
 
 }
