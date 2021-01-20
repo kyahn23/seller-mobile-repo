@@ -137,7 +137,7 @@
                 <tr style="height: 2.5rem;">
                   <th style="width: 30%; border-top: 2px solid lightgrey;" class="bg-blue-1">추가지원금</th>
                   <td style="width: 30%; border-top: 2px solid lightgrey;">
-                    <span>{{ Number(thisOne.pnExtSubsdRt).toLocaleString() }}</span></td>
+                    <span>{{ Number(thisOne.pnExtSubsdDv).toLocaleString() }}</span></td>
                   <td style="width: 30%; border-top: 2px solid lightgrey;">
                     <span>{{ Number(thisOne.pnExtSubsdRt).toLocaleString() }}</span></td>
                 </tr>

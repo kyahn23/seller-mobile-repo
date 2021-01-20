@@ -1,5 +1,5 @@
 <template>
-  <q-layout class="column flex-center q-pb-xl">
+  <q-layout class="column flex-center q-pb-xl" v-cloak>
     <q-img
       class="q-pt-xl q-pb-md"
       src="images/pentas_logo_320.png"
@@ -69,7 +69,7 @@
     <q-dialog v-model="alertYn" persistent full-width>
       <q-card>
         <q-card-section>
-          <div class="text-h6">{{alertTitle}}</div>
+          <div class="text-h6">{{ alertTitle }}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none" v-html="alertContent">
@@ -100,6 +100,9 @@ export default {
       rootCtx: process.env.API
     };
   },
+  created() {
+
+  },
   mounted() {
     this.urlchk()
   },
@@ -109,6 +112,15 @@ export default {
       let loginStat = ''
       if (currentPath.indexOf('loginStat') !== -1) {
         loginStat = currentPath.substring(currentPath.lastIndexOf('=') + 1)
+        // if (loginStat.includes('SUCC')) {
+        //   let mbrId = currentPath.substring(currentPath.lastIndexOf('%3D') + 3)
+        //   mbrId = mbrId.replace('%40', '@')
+        //
+        //   this.$store.commit("setAuth", {isAuth: true});
+        //   this.$store.commit("setCurrentUser", {currentUser: mbrId});
+        //
+        //   this.$router.push({path: "/main"});
+        // }
         if (loginStat === 'FAIL') {
           this.$q.notify({
             color: "grey-8",

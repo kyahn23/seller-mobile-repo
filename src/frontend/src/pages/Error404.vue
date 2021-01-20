@@ -6,7 +6,8 @@
       </div>
 
       <div class="text-h2" style="opacity:.4">
-        Oops. Nothing here...
+        잘못된
+        <br />접근입니다.
       </div>
 
       <q-btn
@@ -14,8 +15,8 @@
         color="white"
         text-color="blue"
         unelevated
-        to="/"
-        label="Go Home"
+        to="/main"
+        label="돌아가기"
         no-caps
       />
     </div>

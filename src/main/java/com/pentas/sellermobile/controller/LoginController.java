@@ -28,7 +28,7 @@ public class LoginController {
         HttpSession session = request.getSession();
 
         String redirectLogin = "redirect:/#/login";
-        String redirectMain = "redirect:/#/main";
+        String redirectloginSucc = "redirect:/#/verify?loginStat=SUCC";
 
         if (principal == null) {
             return "redirect:/#/login";
@@ -89,10 +89,10 @@ public class LoginController {
             session.setAttribute("bnMbrId", userVO.getBnMbrId());
             session.setAttribute("mbrNm", userVO.getMbrNm());
             session.setAttribute("mstMbrYn", userVO.getMstMbrYn());
-            redirect.addFlashAttribute("loginStat", "SUCC");
-            redirectMain = StringUtils.join(redirectMain, "?bnMbrId=", userVO.getBnMbrId());
+//            redirect.addFlashAttribute("loginStat", "SUCC");
+            redirectloginSucc = StringUtils.join(redirectloginSucc, "?bnMbrId=", userVO.getBnMbrId());
 
-            return redirectMain;
+            return redirectloginSucc;
         }
     }
 

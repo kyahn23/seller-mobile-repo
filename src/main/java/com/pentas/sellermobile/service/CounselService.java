@@ -15,6 +15,12 @@ public class CounselService {
     @Autowired
     CmmnDao cmmnDao;
 
+    /**
+     * 상담리스트 가져오기
+     *
+     * @param param
+     * @return
+     */
     public PageList<DevMap> counselList(DevMap param) {
         int page = Integer.parseInt(param.getString("page"));
         int pageSize = 10;
@@ -24,147 +30,23 @@ public class CounselService {
         return cmmnDao.selectListPage("sellermobile.counsel.counselList", param, pageBounds);
     }
 
-    public DevMap getCurrPolicy(DevMap param) {
-        return cmmnDao.selectOne("sellermobile.counsel.currPolicy", param);
-    }
-
-    public List<DevMap> bnMbrList(DevMap param) {
-
-        return cmmnDao.selectList("sellermobile.counsel.bnMbrList", param);
-    }
-
     /**
-     * 방문예정일 저장
-     * @param param
-     */
-    public void saveCounsel(DevMap param) {
-        String visitDt = param.getString("visitDt");
-        visitDt = visitDt.concat("00");
-        param.put("VISIT_DT", visitDt);
-
-        cmmnDao.update("sellermobile.counsel.saveCounsel", param);
-    }
-
-    public void modiVisitDt(DevMap param) {
-        String visitDt = param.getString("visitDt");
-        visitDt = visitDt.concat("00");
-        param.put("VISIT_DT", visitDt);
-
-        cmmnDao.update("sellermobile.counsel.modiVisitDt", param);
-    }
-
-    public List<DevMap> useAllCarrMntRt(DevMap param) {
-        return cmmnDao.selectList("sellermobile.counsel.useAllCarrMntRt", param);
-    }
-
-    public List<DevMap> allDeviceListByCarr(DevMap param) {
-        return cmmnDao.selectList("sellermobile.counsel.allDeviceListByCarr", param);
-    }
-
-    /**
-     * 상담결과저장
-     * @param param
-     */
-    public void registerRslt(DevMap param) {
-        cmmnDao.update("sellermobile.counsel.registerRslt", param);
-    }
-
-    /**
-     * 클라이언트 회원 마케팅 동의 여부 확인
-     * @param param
-     * @return
-     */
-    public String checkClientMarketing(DevMap param) { return cmmnDao.selectOne("sellermobile.counsel.selectClientMarketing", param); }
-
-    /**
-     * 마케팅 대상 생성
-     * @param param
-     */
-    public void newMarketingOne(DevMap param) { cmmnDao.insert("sellermobile.counsel.insertMarketingOne", param); }
-
-    /**
-     * 마케팅 대상 목록 조회
+     * 현재 정책 가져오기
      *
      * @param param
      * @return
      */
-    public PageList<DevMap> marketingList(DevMap param) {
-        int page = Integer.parseInt(param.getString("page"));
-        int pageSize = 10;
-        PageBounds pageBounds = new PageBounds(page, pageSize);
-
-        return cmmnDao.selectListPage("sellermobile.counsel.selectMarketingList", param, pageBounds);
+    public DevMap getCurrPolicy(DevMap param) {
+        return cmmnDao.selectOne("sellermobile.counsel.currPolicy", param);
     }
-
-    /**
-     * 마케팅 결과 상세 조회
-     * @param param
-     * @return
-     */
-    public DevMap marketingOne(DevMap param) {
-        return cmmnDao.selectOne("sellermobile.counsel.selectMarketingOne", param);
-    }
-
-    /**
-     * 요금제 목록 조회
-     * @param param
-     * @return
-     */
-    public List<DevMap> monthlyRateList(DevMap param) {
-        return cmmnDao.selectList("sellermobile.counsel.selectMonthlyRate", param);
-    }
-
-    /**
-     * 제조사 목록 조회
-     * @param param
-     * @return
-     */
-    public List<String> pnMkr(DevMap param) {
-        return cmmnDao.selectList("sellermobile.counsel.selectPnMkr", param);
-    }
-
-    /**
-     * 기기 모델명으로 제조사 조회
-     * @param param
-     * @return
-     */
-    public String pnMkrOne(String param) { return cmmnDao.selectOne("sellermobile.counsel.selectPnMkrOne", param); }
-
-
-
-    /**
-     * 마케팅 상세 정보 저장
-     * @param param
-     */
-    public void saveMarketingOne(DevMap param) {
-        cmmnDao.update("sellermobile.counsel.updateMarketingOne", param);
-    }
-
-    /**
-     * 마케팅 상세 정보 저장 (신규, 별도 개통)
-     * @param param
-     */
-    public void saveMarketingNew(DevMap param) { cmmnDao.insert("sellermobile.counsel.insertMarketingNew", param); }
 
     /**
      * 블랙리스트 등록여부 확인
+     *
      * @param param
      */
     public DevMap blackYnChk(DevMap param) {
         return cmmnDao.selectOne("sellermobile.counsel.blackYnChk", param);
     }
 
-    /**
-     *  블랙리스트 등록
-     * @param param
-     */
-    public void addBlkClient(DevMap param) {
-        cmmnDao.insert("sellermobile.counsel.addBlkClient", param);
-    }
-
-
-
-    public void refuseCounsel(DevMap param) {
-        cmmnDao.update("sellermobile.counsel.refuseCounsel", param);
-    }
 }

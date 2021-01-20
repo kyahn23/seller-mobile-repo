@@ -3,9 +3,15 @@ const routes = [
     path: '/login',component: () => import('pages/Login.vue')
   },
   {
+    path: '/verify', component: () => import('components/Verify.vue')
+  },
+  {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
-    meta: { titleLabel: "펜타폰" },
+    meta: {
+      requiresAuth: true,
+      titleLabel: "펜타폰"
+    },
     children: [
       { path: "", component: () => import("pages/Main.vue") },
       { path: "main", component: () => import("pages/Main.vue") },

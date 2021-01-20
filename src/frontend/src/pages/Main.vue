@@ -179,16 +179,10 @@ export default {
     }
   },
   mounted() {
-    let AuthChk = this.$store.getters.isAuth
-
-    if (AuthChk === false) {
-      let currentPath = window.location.href
-      let mbrId = currentPath.substring(currentPath.lastIndexOf('=') + 1)
-      mbrId = mbrId.replace('%40', '@')
-      this.$store.commit("setCurrentUser", {currentUser: mbrId});
-      this.getInfo()
-    }
-
+    // let currentPath = window.location.href
+    // let mbrId = currentPath.substring(currentPath.lastIndexOf('=') + 1)
+    // mbrId = mbrId.replace('%40', '@')
+    this.getInfo()
   },
   methods: {
     getInfo() {
@@ -203,7 +197,6 @@ export default {
       )
     },
     getInfoCB(response) {
-      this.$store.commit("setAuth", {isAuth: true});
       this.$store.commit("setMbrName", {mbrName: response.mbrNm});
       this.$store.commit("setBnName", {bnName: response.bnName});
       // this.mainInit()

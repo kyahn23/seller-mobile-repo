@@ -49,7 +49,8 @@
                 <span v-if="cs.callStCd === 'R'" class="bg-deep-orange-3 rounded-borders text-white q-pa-xs">상담접수</span>
                 <span v-else-if="cs.callStCd === 'P'" class="bg-green-3 rounded-borders text-white q-pa-xs">방문예정</span>
                 <span v-else-if="cs.callStCd === 'T'" class="bg-blue-3 rounded-borders text-white q-pa-xs">개통완료</span>
-                <span v-else-if="cs.callStCd === 'E' || cs.callStCd === 'C'" class="bg-grey-6 rounded-borders text-white q-pa-xs">미개통</span>
+                <span v-else-if="cs.blkYn === 0 && (cs.callStCd === 'E'|| cs.callStCd === 'C')" class="bg-grey-6 rounded-borders text-white q-pa-xs">미개통</span>
+                <span v-else-if="cs.blkYn === 1 && (cs.callStCd === 'E'|| cs.callStCd === 'C')" class="bg-red-5 rounded-borders text-white q-pa-xs">블랙고객</span>
               </q-item-label>
               <q-item-label class="text-caption" style="font-size: 1em;">
                 {{ cs.pnMdlNm }} {{cs.pnStor}}GB
