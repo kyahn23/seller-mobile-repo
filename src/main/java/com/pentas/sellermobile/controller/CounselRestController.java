@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RestController
 public class CounselRestController {
@@ -41,11 +40,11 @@ public class CounselRestController {
     }
 
     /**
-     * 방문예정 상담목록 가져오기
+     * 오늘 방문예정 상담목록 가져오기
      * @param param
      * @return
      */
-    @PostMapping("/service/getVisitCounselList")
+    @PostMapping("/status/getVisitCsList")
     public DevMap getVisitCounselList(@RequestBody DevMap param, HttpServletRequest request) {
         //        세션에서 회원아이디 가져오기
         HttpSession session = request.getSession();

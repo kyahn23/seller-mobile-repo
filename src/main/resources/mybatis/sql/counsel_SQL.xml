@@ -3,24 +3,24 @@
 <mapper namespace="sellermobile.counsel">
 
     <select id="counselList" resultType="DevMap" parameterType="DevMap">
-        select T.CALL_ST_CD,
+        SELECT T.CALL_ST_CD,
         t1.MNT_CARR,
-        t1.PN_REG_DIS as PN_REG_DIS_CD,
-        (SELECT CD_NM FROM TBL_CMMN_CD tcc WHERE tcc.CD_VAL = t1.PN_REG_DIS) as PN_REG_DIS,
-        (select PN_MNT_RT_NM FROM TBL010 tt1 where tt1.PN_MNT_RT_NO = t1.PN_MNT_RT_NO) as PN_MNT_RT_NM,
-        (select PN_NET_TYPE FROM TBL010 tt1 where tt1.PN_MNT_RT_NO = t1.PN_MNT_RT_NO) as PN_NET_TYPE,
+        t1.PN_REG_DIS AS PN_REG_DIS_CD,
+        (SELECT CD_NM FROM TBL_CMMN_CD tcc WHERE tcc.CD_VAL = t1.PN_REG_DIS) AS PN_REG_DIS,
+        (SELECT PN_MNT_RT_NM FROM TBL010 tt1 WHERE tt1.PN_MNT_RT_NO = t1.PN_MNT_RT_NO) AS PN_MNT_RT_NM,
+        (SELECT PN_NET_TYPE FROM TBL010 tt1 WHERE tt1.PN_MNT_RT_NO = t1.PN_MNT_RT_NO) AS PN_NET_TYPE,
         t1.PN_MNT_RT_NO,
         t1.PN_MDL_NO,
-        (select DISTINCT PN_MDL_NM FROM TBL011 tt2 where tt2.PN_MDL_NO = t1.PN_MDL_NO) as PN_MDL_NM,
+        (SELECT DISTINCT PN_MDL_NM FROM TBL011 tt2 WHERE tt2.PN_MDL_NO = t1.PN_MDL_NO) as PN_MDL_NM,
         t1.PN_STOR,
-        (select PN_MSRP FROM TBL011 tt4 where tt4.PN_MDL_NO = t1.PN_MDL_NO and tt4.PN_STOR = t1.PN_STOR) as PN_MSRP,
-        (SELECT t.PN_IMG FROM TBL011 t WHERE t.PN_MDL_NO =t1.PN_MDL_NO GROUP BY t.PN_MDL_NO) as PN_IMG,
-        (SELECT MBR_NM FROM TBL001 tt3 where tt3.CL_MBR_ID = t1.CL_MBR_ID) as CL_MBR_NM,
+        (SELECT PN_MSRP FROM TBL011 tt4 WHERE tt4.PN_MDL_NO = t1.PN_MDL_NO AND tt4.PN_STOR = t1.PN_STOR) AS PN_MSRP,
+        (SELECT t.PN_IMG FROM TBL011 t WHERE t.PN_MDL_NO =t1.PN_MDL_NO GROUP BY t.PN_MDL_NO) AS PN_IMG,
+        (SELECT MBR_NM FROM TBL001 tt3 WHERE tt3.CL_MBR_ID = t1.CL_MBR_ID) AS CL_MBR_NM,
         t1.CL_MBR_ID,   /* 고객ID */
         T.MBR_PN_NO as CL_MBR_PN_NO,    /* 고객연락처 */
-        (SELECT EXISTS (SELECT * FROM `TBL005-B` tb WHERE tb.DEAL_NO = T.DEAL_NO)) as BLK_YN,
-        (SELECT DISTINCT PN_MKR FROM TBL011 pnmkr where pnmkr.PN_MDL_NO = t1.PN_MDL_NO) as PN_MKR,
-        DATE_FORMAT(T.VISIT_DT, '%Y-%m-%d %H:%i') as VISIT_DT,
+        (SELECT EXISTS (SELECT * FROM `TBL005-B` tb WHERE tb.DEAL_NO = T.DEAL_NO)) AS BLK_YN,
+        (SELECT DISTINCT PN_MKR FROM TBL011 pnmkr WHERE pnmkr.PN_MDL_NO = t1.PN_MDL_NO) AS PN_MKR,
+        DATE_FORMAT(T.VISIT_DT, '%Y-%m-%d %H:%i') AS VISIT_DT,
         t1.DEAL_REQ,    /* 고객요청내용 */
         T.OLD_OFCL_SUBSD,
         T.OLD_EXT_SUBSD_DV,
@@ -31,25 +31,25 @@
         T.DEAL_CONT,    /* 상담결과 */
         T.CNCL_CMNT,    /* 취소사유 */
         T.BN_MBR_ID,    /* 업체상담직원아이디 */
-        (SELECT MBR_NM FROM TBL002 tt5 WHERE tt5.BN_MBR_ID = T.BN_MBR_ID) as BN_MBR_NM, /* 업체상담직원이름 */
+        (SELECT MBR_NM FROM TBL002 tt5 WHERE tt5.BN_MBR_ID = T.BN_MBR_ID) AS BN_MBR_NM, /* 업체상담직원이름 */
         T.REG_PD, /* 개통한 약정기간 */
         T.REG_TYPE, /* 개통한 가입유형 */
         T.REG_MBR_PN_NO, /* 개통한 번호 */
         T.REG_MNT_RT_NO, /* 개통한 요금제 */
-        (select PN_MNT_RT_NM FROM TBL010 tt9 where tt9.PN_MNT_RT_NO = T.REG_MNT_RT_NO) as REG_MNT_RT_NM,
+        (SELECT PN_MNT_RT_NM FROM TBL010 tt9 WHERE tt9.PN_MNT_RT_NO = T.REG_MNT_RT_NO) AS REG_MNT_RT_NM,
         T.REG_CARR, /* 개통한 통신사 */
         (SELECT DISTINCT PN_MKR FROM TBL011 pnmkr where pnmkr.PN_MDL_NO = T.REG_PN_MDL_NO) as REG_PN_MKR, /* 개통한 모델제조사
         */
         T.REG_PN_MDL_NO, /* 개통한 모델 */
         T.REG_PN_STOR, /* 개통한 모델 용량 */
-        (select DISTINCT PN_MDL_NM FROM TBL011 tt2 where tt2.PN_MDL_NO = T.REG_PN_MDL_NO) as REG_PN_MDL_NM, /* 개통한 모델이름
+        (SELECT DISTINCT PN_MDL_NM FROM TBL011 tt2 WHERE tt2.PN_MDL_NO = T.REG_PN_MDL_NO) AS REG_PN_MDL_NM, /* 개통한 모델이름
         */
         T.REG_EXT_SERV_YN, /* 개통시 부가서비스여부 */
-        DATE_FORMAT(T.INP_DT, '%Y-%m-%d %H:%i') as INP_DT,
-        DATE_FORMAT(T.AMD_DT, '%Y-%m-%d %H:%i') as AMD_DT
-        from TBL008 T left join TBL006 t1 on T.DEAL_NO = t1.DEAL_NO
+        DATE_FORMAT(T.INP_DT, '%Y-%m-%d %H:%i') AS INP_DT,
+        DATE_FORMAT(T.AMD_DT, '%Y-%m-%d %H:%i') AS AMD_DT
+        FROM TBL008 T LEFT JOIN TBL006 t1 ON T.DEAL_NO = t1.DEAL_NO
         WHERE T.BN_NO = (SELECT cf_get_bn_no(#{loginMbrId}))
-        <if test='searchKwd != ""'>
+        <if test='searchKwd != null'>
             <choose>
                 <when test="selectOpt == 'clientNm'">
                     AND (SELECT MBR_NM FROM TBL001 tt5 where tt5.CL_MBR_ID = t1.CL_MBR_ID) LIKE CONCAT('%', #{searchKwd}, '%')
@@ -59,11 +59,17 @@
                 </when>
             </choose>
         </if>
-        ORDER BY AMD_DT desc
+        <if test='callStCd != null and !callStCd.equals("all")'>
+            AND T.CALL_ST_CD = #{callStCd}
+        </if>
+        <if test="searchDay == 'today'">
+            AND DATE_FORMAT(T.VISIT_DT, '%Y-%m-%d') = DATE_FORMAT(SYSDATE() , '%Y-%m-%d')
+        </if>
+        ORDER BY AMD_DT DESC
     </select>
 
     <select id="currPolicy" parameterType="DevMap" resultType="DevMap">
-        select (select PN_MSRP FROM TBL011 tt1 where tt1.PN_MDL_NO = T.PN_MDL_NO and tt1.PN_STOR = T.PN_STOR) as
+        SELECT (SELECT PN_MSRP FROM TBL011 tt1 WHERE tt1.PN_MDL_NO = T.PN_MDL_NO AND tt1.PN_STOR = T.PN_STOR) AS
         PN_MSRP,
         T.SELL_YN,
         T.PN_OFCL_SUBSD,
@@ -72,19 +78,19 @@
         T.PN_EXT_SERV_YN
         <choose>
             <when test='pnRegDis == "A"'>
-                from `TBL007-A` T
+                FROM `TBL007-A` T
             </when>
             <when test='pnRegDis == "B"'>
-                from `TBL007-B` T
+                FROM `TBL007-B` T
             </when>
             <when test='pnRegDis == "C"'>
-                from `TBL007-C` T
+                FROM `TBL007-C` T
             </when>
         </choose>
-        where PN_MDL_NO = #{pnMdlNo}
-        and PN_STOR = #{pnStor}
-        and PN_MNT_RT_NO = #{pnMntRtNo}
-        and BN_NO = (SELECT cf_get_bn_no(#{loginMbrId}))
+        WHERE PN_MDL_NO = #{pnMdlNo}
+        AND PN_STOR = #{pnStor}
+        AND PN_MNT_RT_NO = #{pnMntRtNo}
+        AND BN_NO = (SELECT cf_get_bn_no(#{loginMbrId}))
     </select>
 
 
@@ -94,8 +100,8 @@
         FROM TBL011 t
         WHERE t.PN_CARR LIKE CONCAT('%' #{pnCarr}, '%')
         AND t.PN_MKR = #{pnMkr}
-        group by t.PN_MDL_NO, t.PN_STOR
-        order by t.REL_DT desc, t.PN_MDL_NO, convert(t.PN_STOR, decimal), convert(t.PN_MSRP, decimal) desc
+        GROUP BY t.PN_MDL_NO, t.PN_STOR
+        ORDER BY t.REL_DT DESC, t.PN_MDL_NO, CONVERT(t.PN_STOR, DECIMAL), CONVERT(t.PN_MSRP, DECIMAL) DESC
     </select>
 
     <select id="blackYnChk" parameterType="DevMap" resultType="DevMap">

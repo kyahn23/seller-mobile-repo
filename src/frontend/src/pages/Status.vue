@@ -35,7 +35,7 @@
     <q-separator/>
     <q-list>
       <q-infinite-scroll @load="onScrollLoad" :offset="110">
-        <div v-for="(cs, idx) in counselList" :key="idx" style="border-bottom: 1px lightgrey solid">
+        <div v-for="(cs, idx) in viewList" :key="idx" style="border-bottom: 1px lightgrey solid">
           <q-item class="q-py-md">
             <q-item-section avatar>
               <q-avatar square size="5em">
@@ -58,15 +58,15 @@
               <q-item-label class="text-caption" style="font-size: 1em;">
                 {{ cs.mntCarr }} / {{cs.pnRegDis}} / {{cs.pnMntRtNm}}
               </q-item-label>
-              <q-item-label class="text-caption" style="font-size: 1em;" v-if="cs.mbrNm">
-                등록자 : {{cs.mbrNm}}
+              <q-item-label class="text-caption" style="font-size: 1em;" v-if="cs.bnMbrNm">
+                등록자 : {{cs.bnMbrNm}}
               </q-item-label>
             </q-item-section>
             <q-item-section side>
               <q-icon
                 name="chevron_right"
                 color="black"
-                @click="dealClick(cs, idx)"
+                @click="csClick(cs, idx)"
               />
             </q-item-section>
           </q-item>
@@ -110,6 +110,9 @@
 </template>
 
 <script>
+import { scroll } from "quasar";
+const { getScrollTarget, setScrollPosition } = scroll;
+
 export default {
   name: "Status",
   data() {
@@ -124,11 +127,27 @@ export default {
       page: "1",
       pageInit: false,
       pageInfo: {},
-      counselList: []
+      counselList: [],
+      myList:[],
+      viewList: []
     }
   },
   mounted() {
-    // this.getList(this.page)
+    if (this.$store.getters.mainCsSearch.searchKwd){
+      this.selectOpt = this.$store.getters.mainCsSearch.selectOpt
+      this.searchKwd = this.$store.getters.mainCsSearch.searchKwd
+
+      this.$store.commit("setCsSearch", {mainCsSearch: {}});
+    }
+  },
+  watch:{
+    myClient(value){
+      if (value){
+        this.viewList = this.counselList
+      } else {
+        this.viewList = this.myList
+      }
+    }
   },
   methods: {
     /** 맨 위로 돌아가기 이벤트 */
@@ -152,18 +171,19 @@ export default {
       }, 2000);
     },
     searchBtn(){
+      this.myClient = true
       this.counselList = []
+      this.myList = []
+      this.viewList = []
       this.getList(this.page)
     },
     getList(page) {
       this.$cf.call(
         process.env.API + "/status/getAllCounselList",
         {
-          mntCarr: "all",
-          counselType: "all",
           selectOpt: this.selectOpt,
           searchKwd: this.searchKwd,
-          page: "1"
+          page: page
         },
         this.getListCB,
         false
@@ -171,18 +191,21 @@ export default {
     },
     /** list 콜백 함수 */
     getListCB(response) {
-      console.log(response)
       this.pageInit = true
       this.pageInfo = response.pageInfo;
       for (let n in response.counselList) {
         this.counselList.push(response.counselList[n]);
+        if(this.counselList[n].bnMbrId === this.$store.getters.currentUser){
+          this.myList.push(response.counselList[n])
+        }
       }
+      this.viewList = this.counselList // 검색시 구분을 전체로 초기화하기때문에 전체리스트를 선언
     },
     saleChg() {
       this.myClient = !this.myClient
     },
     /** > 클릭 이벤트 */
-    dealClick(obj, idx) {
+    csClick(obj, idx) {
       this.$store.commit("setCs", {cs: obj});
       this.$router.push({path: "/status/detail/" + idx});
     },

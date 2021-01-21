@@ -7,8 +7,6 @@ import com.pentas.sellermobile.common.module.util.DevMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CounselService {
 

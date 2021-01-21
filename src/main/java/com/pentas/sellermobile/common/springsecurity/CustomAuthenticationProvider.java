@@ -38,16 +38,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         userVO.setInputPwdNo(userPw);
-        
-        // 사용자 role(auth) 가져오기
-        // List<String> authList = cmmnDao.selectList("com.pentas.member.getUserAuth", userId);
-        // System.out.println(authList);
-        
-        // Collection<SimpleGrantedAuthority> auths = new ArrayList<SimpleGrantedAuthority>();
-        // for(String auth : authList) {
-        // 	auths.add(new SimpleGrantedAuthority(auth));
-        // }
-        // userVO.setAuthorities(auths);
 
 		return new UsernamePasswordAuthenticationToken(userVO, userPw);
 	}

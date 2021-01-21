@@ -97,8 +97,8 @@ public class ProductService {
         sellList = cmmnDao.selectList("sellermobile.carr.sellDeviceList", param);
 
         for (DevMap list : sellList) {
-            if (list.getString("sellStatus") == null){
-                if (list.getString("lastModiDate") == null){
+            if (list.getString("sellStatus") == null) {
+                if (list.getString("lastModiDate") == null) {
                     list.put("sellStatus", "N");    // 판매이력없음(=미판매)
                 } else {
                     list.put("sellStatus", "P");    // 판매이력 있음(=판매중지)
@@ -260,6 +260,7 @@ public class ProductService {
 
     /**
      * 기기 목록 조회
+     *
      * @param param
      * @return
      */

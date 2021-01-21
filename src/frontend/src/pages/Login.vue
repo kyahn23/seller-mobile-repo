@@ -112,15 +112,6 @@ export default {
       let loginStat = ''
       if (currentPath.indexOf('loginStat') !== -1) {
         loginStat = currentPath.substring(currentPath.lastIndexOf('=') + 1)
-        // if (loginStat.includes('SUCC')) {
-        //   let mbrId = currentPath.substring(currentPath.lastIndexOf('%3D') + 3)
-        //   mbrId = mbrId.replace('%40', '@')
-        //
-        //   this.$store.commit("setAuth", {isAuth: true});
-        //   this.$store.commit("setCurrentUser", {currentUser: mbrId});
-        //
-        //   this.$router.push({path: "/main"});
-        // }
         if (loginStat === 'FAIL') {
           this.$q.notify({
             color: "grey-8",

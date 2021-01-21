@@ -35,6 +35,7 @@ public class CommonService {
 
     /**
      * 멤버 ID (이메일) 중복 확인
+     *
      * @param param
      * @return
      */
@@ -45,30 +46,43 @@ public class CommonService {
 
     /**
      * 비밀번호 오류 횟수 초기화
+     *
      * @param bnMbrId
      */
-    public void updatePwerrCntZero(String bnMbrId) { cmmnDao.update("sellermobile.common.updatePwerrCntZero", bnMbrId); }
+    public void updatePwerrCntZero(String bnMbrId) {
+        cmmnDao.update("sellermobile.common.updatePwerrCntZero", bnMbrId);
+    }
 
     /**
      * 비밀번호 오류 횟수 추가
+     *
      * @param bnMbrId
      */
-    public void updatePwerrCntPlus(String bnMbrId) { cmmnDao.update("sellermobile.common.updatePwerrCntPlus", bnMbrId); }
+    public void updatePwerrCntPlus(String bnMbrId) {
+        cmmnDao.update("sellermobile.common.updatePwerrCntPlus", bnMbrId);
+    }
 
     /**
      * 로그인 가능여부 가능으로 변경
+     *
      * @param bnMbrId
      */
-    public void updateLginAvlY(String bnMbrId) { cmmnDao.update("sellermobile.common.updateLginAvlY", bnMbrId); }
+    public void updateLginAvlY(String bnMbrId) {
+        cmmnDao.update("sellermobile.common.updateLginAvlY", bnMbrId);
+    }
 
     /**
      * 로그인 가능여부 불가로 변경
+     *
      * @param bnMbrId
      */
-    public void updateLginAvlN(String bnMbrId) { cmmnDao.update("sellermobile.common.updateLginAvlN", bnMbrId); }
+    public void updateLginAvlN(String bnMbrId) {
+        cmmnDao.update("sellermobile.common.updateLginAvlN", bnMbrId);
+    }
 
     /**
      * 초기화 비밀번호 변경
+     *
      * @param param
      */
     public void updateMbrPw(DevMap param) {
@@ -77,6 +91,7 @@ public class CommonService {
 
     /**
      * 파일 정보 조회
+     *
      * @param param : 파일저장명
      * @return
      */
@@ -86,6 +101,7 @@ public class CommonService {
 
     /**
      * 업로드한 파일 삭제 처리 (update)
+     *
      * @param param
      * @throws UserException
      */
@@ -95,6 +111,7 @@ public class CommonService {
 
     /**
      * 이미지 태그의 src에 소스정보를 제공한다.
+     *
      * @param response
      * @param fileName
      * @throws UserException
@@ -134,6 +151,7 @@ public class CommonService {
 
     /**
      * 파일 다운로드
+     *
      * @param response
      * @param fileName
      * @throws UserException
@@ -195,6 +213,7 @@ public class CommonService {
      * 정해진 경로 이외의 디렉터리와 파일에 접근할 수 없도록 처리하고
      * 외부 입력값에 대해  replaceAll()등의 메소드를 사용하여
      * 의도하지 않은 경로로의 접근을 허용하는 위험 문자열(",/,\,.. 등)을 제고하는 필터링을 수행
+     *
      * @param value
      * @return
      */
@@ -212,6 +231,7 @@ public class CommonService {
 
     /**
      * 외부에서 입력된 파라미터를 HTTP 응답헤더에 포함시킬 경우 CR, LF 등의 개행문자 제거
+     *
      * @param parameter
      * @return
      */
@@ -221,6 +241,7 @@ public class CommonService {
 
     /**
      * 임시 비밀번호 생성
+     *
      * @return
      */
     private String generateTempPwd() {
@@ -230,9 +251,12 @@ public class CommonService {
 
     /**
      * 사업자 등록증 확인 여부 (시스템 관리자가 확인)
+     *
      * @param param
      * @return
      */
-    public String checkBnCardChk(String param) { return cmmnDao.selectOne("sellermobile.common.selectBnCardChk", param); }
+    public String checkBnCardChk(String param) {
+        return cmmnDao.selectOne("sellermobile.common.selectBnCardChk", param);
+    }
 
 }

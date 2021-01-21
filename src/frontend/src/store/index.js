@@ -20,7 +20,8 @@ export default function() {
       currentUser: "",
       mbrName: "",
       bnName:"",
-      cs:{}
+      cs:{},
+      mainCsSearch:{}
     },
     getters: {
       isLoading: state => state.isLoading,
@@ -31,7 +32,8 @@ export default function() {
       currentUser: state => state.currentUser,
       mbrName: state => state.mbrName,
       bnName: state => state.bnName,
-      cs: state => state.cs
+      cs: state => state.cs,
+      mainCsSearch: state => state.mainCsSearch
     },
     mutations: {
       setLoading(state, payload) {
@@ -66,6 +68,9 @@ export default function() {
       },
       setCs(state, payload){
         state.cs = payload.cs
+      },
+      setCsSearch(state, payload){
+        state.mainCsSearch = payload.mainCsSearch
       }
     }
   });

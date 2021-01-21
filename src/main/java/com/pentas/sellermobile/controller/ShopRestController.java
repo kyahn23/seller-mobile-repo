@@ -1,6 +1,5 @@
 package com.pentas.sellermobile.controller;
 
-import com.pentas.sellermobile.common.exception.UserException;
 import com.pentas.sellermobile.common.module.mybatis.paginator.domain.PageList;
 import com.pentas.sellermobile.common.module.util.DevMap;
 import com.pentas.sellermobile.service.CommonService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RestController
 public class ShopRestController {

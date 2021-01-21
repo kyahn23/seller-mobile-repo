@@ -1,7 +1,6 @@
 package com.pentas.sellermobile.service;
 
 import com.pentas.sellermobile.common.dao.CmmnDao;
-import com.pentas.sellermobile.common.exception.UserException;
 import com.pentas.sellermobile.common.module.mybatis.paginator.domain.PageBounds;
 import com.pentas.sellermobile.common.module.mybatis.paginator.domain.PageList;
 import com.pentas.sellermobile.common.module.util.DevMap;

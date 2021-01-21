@@ -109,7 +109,6 @@
 
 <script>
 import { scroll } from "quasar";
-
 const { getScrollTarget, setScrollPosition } = scroll;
 
 export default {

@@ -204,11 +204,7 @@ export default {
   },
   mounted() {
     this.cs = this.$store.getters.cs
-    console.log(this.cs)
     this.$store.commit("setCs", {cs: {}})
-
-    console.log(this.cs.blkYn)
-
 
     this.getCurrentPolicy()
   },
@@ -228,8 +224,6 @@ export default {
       )
     },
     getCurrentPolicyCB(response) {
-      console.log("현재정책")
-      console.log(response)
       this.currentPolicy = response
     },
     pnExtServYn(val) {
